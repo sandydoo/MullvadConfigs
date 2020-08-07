@@ -216,21 +216,27 @@ readPeerInfo =
 
 main :: IO ()
 main =
-  do  request <- HTTP.parseRequest serverListURL
+  do  print ("Fetching current server list..." :: String)
+
+      request <- HTTP.parseRequest serverListURL
       serverList <- return . filterServerList . HTTP.getResponseBody =<< HTTP.httpBS request
 
-      -- Load peers
+      print ("Reading local peer list..." :: String)
       peers <- readPeerInfo
 
       currentPath <- FS.getCurrentDirectory
 
       mapM_
         (\peer ->
-          do  let configPath = currentPath <> "/configs/" <> unpack (peerName peer)
+          do  let name = unpack (peerName peer)
+              let configPath = currentPath <> "/configs/" <> name
+
+              print ("Creating configs for " <> name <> "..." :: String)
               FS.createDirectoryIfMissing True configPath
 
               mapM_ (\server -> createConfig peer server configPath) serverList
 
+              print ("Creating zip archive for " <> name <> "..." :: String)
               Zip.createArchive (configPath <> ".zip") (Zip.packDirRecur Zip.Deflate Zip.mkEntrySelector configPath)
         ) peers
 

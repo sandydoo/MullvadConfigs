@@ -70,21 +70,22 @@ $(deriveToJSON defaultOptions ''ServerInfo)
 
 
 instance FromJSON ServerInfo where
-  parseJSON (Object v) = ServerInfo
-    <$> v .: "hostname"
-    <*> v .: "country_code"
-    <*> v .: "country_name"
-    <*> v .: "city_code"
-    <*> v .: "city_name"
-    <*> v .: "active"
-    <*> v .: "owned"
-    <*> v .: "provider"
-    <*> v .: "ipv4_addr_in"
-    <*> v .: "ipv6_addr_in"
-    <*> v .: "type"
-    <*> v .: "pubkey"
-    <*> v .: "multihop_port"
-    <*> v .: "socks_name"
+  parseJSON (Object v) =
+    ServerInfo
+      <$> v .: "hostname"
+      <*> v .: "country_code"
+      <*> v .: "country_name"
+      <*> v .: "city_code"
+      <*> v .: "city_name"
+      <*> v .: "active"
+      <*> v .: "owned"
+      <*> v .: "provider"
+      <*> v .: "ipv4_addr_in"
+      <*> v .: "ipv6_addr_in"
+      <*> v .: "type"
+      <*> v .: "pubkey"
+      <*> v .: "multihop_port"
+      <*> v .: "socks_name"
 
   parseJSON _ = mzero
 
@@ -159,35 +160,51 @@ filterServerList serverList =
   ^.. values
   . filteredBy (key "type"   . _String . only "wireguard")
   . filteredBy (key "active" . _Bool   . only True)
-  . filtered (\server -> isJust $ getCountryCode server >>= isPreferredCountryCode)
+  . filtered
+      (\server ->
+        isJust $
+          getCountryCode server >>= isPreferredCountryCode
+      )
   . _JSON
 
 
 createName :: ServerInfo -> Text
 createName ServerInfo{ hostname, cityName, countryCode, owned } =
-  let serverCode = Text.takeWhile (/= '-') hostname
+  let serverCode =
+        Text.takeWhile (/= '-') hostname
 
-      countryEmoji = fromMaybe "" $ Map.lookup countryCode countryEmojis
+      countryEmoji =
+        fromMaybe "" $
+          Map.lookup countryCode countryEmojis
 
-      nameList = Text.intercalate "-" [countryEmoji, Text.toLower cityName, serverCode]
+      nameList =
+        Text.intercalate "-"
+          [countryEmoji, Text.toLower cityName, serverCode]
 
-      newName = if owned then nameList <> "-🌟" else nameList
+      newName =
+        if owned
+        then nameList <> "-🌟"
+        else nameList
   in
     newName
 
 
 createConfig :: PeerInfo -> ServerInfo -> FilePath -> IO ()
 createConfig peer server configPath =
-  do  let newConfig = config peer server
-      let filePath = configPath <> "/" <> unpack (createName server) <> ".conf"
+  let
+    newConfig =
+      config peer server
 
-      BS.writeFile filePath (UTF8.fromString . unpack $ newConfig)
+    filePath =
+      configPath <> "/" <> unpack (createName server) <> ".conf"
+  in
+    BS.writeFile filePath (UTF8.fromString . unpack $ newConfig)
 
 
 readPeerInfo :: IO [PeerInfo]
 readPeerInfo =
-  do  bytestring <- BS.readFile(".peers.json")
-
+  BS.readFile(".peers.json") >>=
+    \bytestring ->
       case (decodeStrict bytestring) of
         Just peers ->
           return peers
@@ -216,7 +233,5 @@ main =
 
               Zip.createArchive (configPath <> ".zip") (Zip.packDirRecur Zip.Deflate Zip.mkEntrySelector configPath)
         ) peers
-
-      -- FS.removeDirectoryRecursive configPath
 
       print ("Configurations created." :: String)

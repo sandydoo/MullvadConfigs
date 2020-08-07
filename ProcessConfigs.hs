@@ -209,8 +209,8 @@ main =
 
       mapM_
         (\peer ->
-          do  let configPath = currentPath <> "/mullvad-" <> unpack (peerName peer)
-              FS.createDirectoryIfMissing False configPath
+          do  let configPath = currentPath <> "/configs/" <> unpack (peerName peer)
+              FS.createDirectoryIfMissing True configPath
 
               mapM_ (\server -> createConfig peer server configPath) serverList
 

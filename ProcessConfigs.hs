@@ -213,7 +213,7 @@ readPeerInfo =
           return []
 
 
-
+-- TODO: add some proper error handling.
 main :: IO ()
 main =
   do  print ("Fetching current server list..." :: String)

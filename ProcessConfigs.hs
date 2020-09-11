@@ -9,7 +9,7 @@
 {-# LANGUAGE DeriveGeneric, NamedFieldPuns, OverloadedStrings, RecordWildCards, TemplateHaskell #-}
 import Codec.Archive.Zip as Zip
 import Control.Lens
-import Control.Monad (mzero)
+import Control.Monad (forM_, mzero)
 import Data.Aeson
 import Data.Aeson.Lens
 import Data.Aeson.TH
@@ -226,18 +226,18 @@ main =
 
       currentPath <- FS.getCurrentDirectory
 
-      mapM_
-        (\peer ->
-          do  let name = unpack (peerName peer)
-              let configPath = currentPath <> "/configs/" <> name
+      forM_ peers $ \peer ->
+        do  let name = unpack $ peerName peer
+            let configPath = currentPath <> "/configs/" <> name
 
-              print ("Creating configs for " <> name <> "..." :: String)
-              FS.createDirectoryIfMissing True configPath
+            print ("Creating configs for " <> name <> "..." :: String)
+            FS.createDirectoryIfMissing True configPath
 
-              mapM_ (\server -> createConfig peer server configPath) serverList
+            forM_ serverList $ \server ->
+              createConfig peer server configPath
 
-              print ("Creating zip archive for " <> name <> "..." :: String)
-              Zip.createArchive (configPath <> ".zip") (Zip.packDirRecur Zip.Deflate Zip.mkEntrySelector configPath)
-        ) peers
+            print ("Creating zip archive for " <> name <> "..." :: String)
+            Zip.createArchive (configPath <> ".zip") $
+              Zip.packDirRecur Zip.Deflate Zip.mkEntrySelector configPath
 
       print ("Configurations created." :: String)

@@ -170,21 +170,22 @@ filterServerList serverList =
 
 createName :: ServerInfo -> Text
 createName ServerInfo{ hostname, cityName, countryCode, owned } =
-  let serverCode =
-        Text.takeWhile (/= '-') hostname
+  let
+    serverCode =
+      Text.takeWhile (/= '-') hostname
 
-      countryEmoji =
-        fromMaybe "" $
-          Map.lookup countryCode countryEmojis
+    countryEmoji =
+      fromMaybe "" $
+        Map.lookup countryCode countryEmojis
 
-      nameList =
-        Text.intercalate "-"
-          [countryEmoji, Text.toLower cityName, serverCode]
+    nameList =
+      Text.intercalate "-"
+        [countryEmoji, Text.toLower cityName, serverCode]
 
-      newName =
-        if owned
-        then nameList <> "-🌟"
-        else nameList
+    newName =
+      if owned
+      then nameList <> "-🌟"
+      else nameList
   in
     newName
 

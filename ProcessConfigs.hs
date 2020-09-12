@@ -215,12 +215,12 @@ readPeerInfo =
 -- TODO: add some proper error handling.
 main :: IO ()
 main =
-  do  print ("Fetching current server list..." :: String)
+  do  putStrLn "Fetching current server list..."
 
       request <- HTTP.parseRequest serverListURL
       serverList <- return . filterServerList . HTTP.getResponseBody =<< HTTP.httpBS request
 
-      print ("Reading local peer list..." :: String)
+      putStrLn "Reading local peer list..."
       peers <- readPeerInfo
 
       currentPath <- FS.getCurrentDirectory
@@ -229,14 +229,14 @@ main =
         do  let name = unpack $ peerName peer
             let configPath = currentPath <> "/configs/" <> name
 
-            print ("Creating configs for " <> name <> "..." :: String)
+            putStrLn $ "Creating configs for " <> name <> "..."
             FS.createDirectoryIfMissing True configPath
 
             forM_ serverList $ \server ->
               createConfig peer server configPath
 
-            print ("Creating zip archive for " <> name <> "..." :: String)
+            putStrLn $ "Creating zip archive for " <> name <> "..."
             Zip.createArchive (configPath <> ".zip") $
               Zip.packDirRecur Zip.Deflate Zip.mkEntrySelector configPath
 
-      print ("Configurations created." :: String)
+      putStrLn "Configurations created."

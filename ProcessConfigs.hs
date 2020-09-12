@@ -9,7 +9,7 @@
 {-# LANGUAGE DeriveGeneric, NamedFieldPuns, OverloadedStrings, RecordWildCards, TemplateHaskell #-}
 import Codec.Archive.Zip as Zip
 import Control.Lens
-import Control.Monad (forM_, mzero)
+import Control.Monad (forM_)
 import Data.Aeson
 import Data.Aeson.Lens
 import Data.Aeson.TH
@@ -70,24 +70,23 @@ $(deriveToJSON defaultOptions ''ServerInfo)
 
 
 instance FromJSON ServerInfo where
-  parseJSON (Object v) =
-    ServerInfo
-      <$> v .: "hostname"
-      <*> v .: "country_code"
-      <*> v .: "country_name"
-      <*> v .: "city_code"
-      <*> v .: "city_name"
-      <*> v .: "active"
-      <*> v .: "owned"
-      <*> v .: "provider"
-      <*> v .: "ipv4_addr_in"
-      <*> v .: "ipv6_addr_in"
-      <*> v .: "type"
-      <*> v .: "pubkey"
-      <*> v .: "multihop_port"
-      <*> v .: "socks_name"
-
-  parseJSON _ = mzero
+  parseJSON =
+    withObject "ServerInfo" $ \o ->
+      ServerInfo
+        <$> o .: "hostname"
+        <*> o .: "country_code"
+        <*> o .: "country_name"
+        <*> o .: "city_code"
+        <*> o .: "city_name"
+        <*> o .: "active"
+        <*> o .: "owned"
+        <*> o .: "provider"
+        <*> o .: "ipv4_addr_in"
+        <*> o .: "ipv6_addr_in"
+        <*> o .: "type"
+        <*> o .: "pubkey"
+        <*> o .: "multihop_port"
+        <*> o .: "socks_name"
 
 
 data PeerInfo =
@@ -105,18 +104,17 @@ $(deriveToJSON defaultOptions ''PeerInfo)
 
 
 instance FromJSON PeerInfo where
-  parseJSON (Object o) =
-    do  peerName       <- o .: "name"
-        peerKey        <- o .: "key"
-        peerPublicKey  <- peerKey .: "public"
-        peerPrivateKey <- peerKey .: "private"
-        peerIpv4Addr   <- o .: "ipv4_address"
-        peerIpv6Addr   <- o .: "ipv6_address"
-        peerPorts      <- o .: "ports"
+  parseJSON =
+    withObject "PeerInfo" $ \o ->
+      do  peerName       <- o .: "name"
+          peerKey        <- o .: "key"
+          peerPublicKey  <- peerKey .: "public"
+          peerPrivateKey <- peerKey .: "private"
+          peerIpv4Addr   <- o .: "ipv4_address"
+          peerIpv6Addr   <- o .: "ipv6_address"
+          peerPorts      <- o .: "ports"
 
-        return PeerInfo{..}
-
-  parseJSON _ = mzero
+          return PeerInfo{..}
 
 
 

@@ -1,14 +1,14 @@
 #!/usr/bin/env stack
 {- stack script
     --ghc-options "-Wall"
-    --package aeson,bytestring,containers,directory,http-conduit,lens,lens-aeson,text,utf8-string,zip
     --resolver lts-16.15
+    --package aeson,bytestring,containers,directory,filepath,http-conduit,lens,lens-aeson,text,utf8-string,zip
 -}
 
 
 {-# LANGUAGE DeriveGeneric, NamedFieldPuns, OverloadedStrings, RecordWildCards, TemplateHaskell #-}
 import Codec.Archive.Zip as Zip
-import Control.Lens
+import Control.Lens hiding ((<.>))
 import Control.Monad (forM_)
 import Data.Aeson
 import Data.Aeson.Lens
@@ -23,6 +23,7 @@ import GHC.Generics
 import qualified Network.HTTP.Simple as HTTP
 import Prelude hiding (writeFile, unlines)
 import qualified System.Directory as FS
+import System.FilePath ((</>), (<.>))
 
 
 
@@ -195,7 +196,7 @@ createConfig peer server configPath =
       config peer server
 
     filePath =
-      configPath <> "/" <> unpack (createName server) <> ".conf"
+      configPath </> unpack (createName server) <.> "conf"
   in
     BS.writeFile filePath (UTF8.fromString . unpack $ newConfig)
 
@@ -227,7 +228,7 @@ main =
 
       forM_ peers $ \peer ->
         do  let name = unpack $ peerName peer
-            let configPath = currentPath <> "/configs/" <> name
+            let configPath = currentPath </> "configs" </> name
 
             putStrLn $ "Creating configs for " <> name <> "..."
             FS.createDirectoryIfMissing True configPath
@@ -236,7 +237,7 @@ main =
               createConfig peer server configPath
 
             putStrLn $ "Creating zip archive for " <> name <> "..."
-            Zip.createArchive (configPath <> ".zip") $
+            Zip.createArchive (configPath <.> "zip") $
               Zip.packDirRecur Zip.Deflate Zip.mkEntrySelector configPath
 
       putStrLn "Configurations created."

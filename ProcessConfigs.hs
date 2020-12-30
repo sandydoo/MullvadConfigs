@@ -1,7 +1,7 @@
 #!/usr/bin/env stack
 {- stack script
     --ghc-options "-Wall"
-    --resolver lts-16.15
+    --resolver lts-16.21
     --package aeson,bytestring,containers,directory,filepath,http-conduit,iproute,lens,lens-aeson,text,utf8-string,zip
 -}
 

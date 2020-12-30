@@ -16,8 +16,10 @@ import Data.Aeson.TH
 import qualified Data.ByteString as BS
 import qualified Data.ByteString.UTF8 as UTF8
 import qualified Data.Map as Map
+import           Data.Map (Map)
 import Data.Maybe (isJust, fromMaybe)
 import qualified Data.Set as Set
+import           Data.Set (Set)
 import Data.Text as Text
 import GHC.Generics
 import qualified Network.HTTP.Simple as HTTP
@@ -31,13 +33,13 @@ serverListURL :: String
 serverListURL = "https://api.mullvad.net/www/relays/all/"
 
 
-preferredCountryCodes :: Set.Set Text
-preferredCountryCodes = Set.fromList ["ch", "de", "gb", "nl", "se"]
+preferredCountryCodes :: Set Text
+preferredCountryCodes = Set.fromList [ "ch", "de", "gb", "nl", "se" ]
 
 
 type Emoji = Text
 
-countryEmojis :: Map.Map Text Emoji
+countryEmojis :: Map Text Emoji
 countryEmojis =
   Map.fromList
     [ ( "ch", "🇨🇭" )

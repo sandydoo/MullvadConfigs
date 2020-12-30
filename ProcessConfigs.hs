@@ -134,8 +134,8 @@ isPreferredCountryCode code = preferredCountryCodes ^? ix code
 -- Generate config
 
 
-config :: PeerInfo -> ServerInfo -> Text
-config PeerInfo{..} ServerInfo{..} =
+createConfig :: PeerInfo -> ServerInfo -> Text
+createConfig PeerInfo{..} ServerInfo{..} =
   unlines $
     [ "[Interface]"
     , "PrivateKey = " <> peerPrivateKey
@@ -189,16 +189,19 @@ createName ServerInfo{ hostname, cityName, countryCode, owned } =
     newName
 
 
-createConfig :: PeerInfo -> ServerInfo -> FilePath -> IO ()
-createConfig peer server configPath =
+createConfigFile :: PeerInfo -> ServerInfo -> FilePath -> IO ()
+createConfigFile peer server configPath =
   let
     newConfig =
-      config peer server
+      createConfig peer server
+
+    toUTF8 =
+      UTF8.fromString . unpack
 
     filePath =
       configPath </> unpack (createName server) <.> "conf"
   in
-    BS.writeFile filePath (UTF8.fromString . unpack $ newConfig)
+    BS.writeFile filePath (toUTF8 newConfig)
 
 
 readPeerInfo :: IO [PeerInfo]
@@ -234,7 +237,7 @@ main =
             FS.createDirectoryIfMissing True configPath
 
             forM_ serverList $ \server ->
-              createConfig peer server configPath
+              createConfigFile peer server configPath
 
             putStrLn $ "Creating zip archive for " <> name <> "..."
             Zip.createArchive (configPath <.> "zip") $

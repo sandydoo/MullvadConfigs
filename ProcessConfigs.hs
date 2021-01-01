@@ -167,7 +167,7 @@ createConfig PeerInfo{..} ServerInfo{..} =
     , "PrivateKey = " <> peerPrivateKey
     , "Address = " <> peerIpv4Addr <> "," <> peerIpv6Addr
     , "DNS = 193.138.218.74"
-    , "\n"
+    , ""
     , "[Peer]"
     , "PublicKey = " <> publicKey
     -- Explicitly send traffic for public IP ranges through the tunnel, excluding private / LAN ranges.

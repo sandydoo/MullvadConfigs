@@ -18,7 +18,7 @@ import qualified Data.ByteString.UTF8 as UTF8
 import Data.IP (IPRange)
 import qualified Data.Map as Map
 import           Data.Map (Map)
-import Data.Maybe (isJust, fromMaybe)
+import Data.Maybe (catMaybes, isJust)
 import qualified Data.Set as Set
 import           Data.Set (Set)
 import Data.Text as Text
@@ -198,23 +198,26 @@ filterServerList serverList =
 createName :: ServerInfo -> Text
 createName ServerInfo{ hostname, cityName, countryCode, owned } =
   let
-    serverCode =
-      Text.takeWhile (/= '-') hostname
-
     countryEmoji =
-      fromMaybe "" $
-        Map.lookup countryCode countryEmojis
+      Map.lookup countryCode countryEmojis
+
+    lowerCityName =
+      Just (Text.toLower cityName)
+
+    serverCode =
+      Just $
+        Text.takeWhile (/= '-') hostname
+
+    preferredServer =
+      if owned
+      then Just "-🌟"
+      else Nothing
 
     nameList =
-      Text.intercalate "-"
-        [countryEmoji, Text.toLower cityName, serverCode]
+      [ countryEmoji, lowerCityName, serverCode, preferredServer ]
 
-    newName =
-      if owned
-      then nameList <> "-🌟"
-      else nameList
   in
-    newName
+    Text.intercalate "-" . catMaybes $ nameList
 
 
 createConfigFile :: PeerInfo -> ServerInfo -> FilePath -> IO ()

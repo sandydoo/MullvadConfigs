@@ -210,7 +210,7 @@ createName ServerInfo{ hostname, cityName, countryCode, owned } =
 
     preferredServer =
       if owned
-      then Just "-🌟"
+      then Just "🌟"
       else Nothing
 
     nameList =

@@ -187,11 +187,7 @@ filterServerList serverList =
   ^.. values
   . filteredBy (key "type"   . _String . only "wireguard")
   . filteredBy (key "active" . _Bool   . only True)
-  . filtered
-      (\server ->
-        isJust $
-          getCountryCode server >>= isPreferredCountryCode
-      )
+  . filtered (\server -> isJust $ isPreferredCountryCode =<< getCountryCode server)
   . _JSON
 
 

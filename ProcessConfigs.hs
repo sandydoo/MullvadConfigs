@@ -198,16 +198,13 @@ createName ServerInfo{ hostname, cityName, countryCode, owned } =
       Map.lookup countryCode countryEmojis
 
     lowerCityName =
-      Just (Text.toLower cityName)
+      Just $ Text.toLower cityName
 
     serverCode =
-      Just $
-        Text.takeWhile (/= '-') hostname
+      Just $ Text.takeWhile (/= '-') hostname
 
     preferredServer =
-      if owned
-      then Just "🌟"
-      else Nothing
+      if owned then Just "🌟" else Nothing
 
     nameList =
       [ countryEmoji, lowerCityName, serverCode, preferredServer ]

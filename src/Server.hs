@@ -1,7 +1,7 @@
 {-# LANGUAGE DeriveGeneric, NamedFieldPuns, OverloadedStrings, TemplateHaskell #-}
 module Server
   ( Server(..)
-  , createName
+  , toPrettyName
   , filterServerList
   ) where
 
@@ -82,8 +82,8 @@ filterServerList serverList =
   . _JSON
 
 
-createName :: Server -> Text
-createName Server{ hostname, cityName, countryCode, owned } =
+toPrettyName :: Server -> Text
+toPrettyName Server{ hostname, cityName, countryCode, owned } =
   let
     countryEmoji =
       CountryFlag.fromCountryCode countryCode

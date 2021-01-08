@@ -9,8 +9,8 @@ import qualified System.Directory as FS
 import System.FilePath ((</>), (<.>))
 
 import Config
-import Peer as Peer
-import Server
+import Peer   as Peer
+import Server as Server
 
 
 
@@ -32,16 +32,16 @@ main =
       currentPath <- FS.getCurrentDirectory
 
       forM_ peers $ \peer ->
-        do  let name = unpack (Peer.name peer)
-            let configPath = currentPath </> "configs" </> name
+        do  let clientName = unpack (Peer.name peer)
+            let configPath = currentPath </> "configs" </> clientName
 
-            putStrLn $ "Creating configs for " <> name <> "..."
+            putStrLn $ "Creating configs for " <> clientName <> "..."
             FS.createDirectoryIfMissing True configPath
 
             forM_ serverList $ \server ->
-              createConfigFile peer server configPath
+              Config.createAndWriteToFile configPath peer server
 
-            putStrLn $ "Creating zip archive for " <> name <> "..."
+            putStrLn $ "Creating zip archive for " <> clientName <> "..."
             Zip.createArchive (configPath <.> "zip") $
               Zip.packDirRecur Zip.Deflate Zip.mkEntrySelector configPath
 

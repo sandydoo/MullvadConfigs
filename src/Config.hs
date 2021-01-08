@@ -1,6 +1,7 @@
 {-# LANGUAGE NamedFieldPuns, OverloadedStrings, RecordWildCards #-}
 module Config
-  ( createConfigFile
+  ( create
+  , createAndWriteToFile
   ) where
 
 
@@ -13,7 +14,7 @@ import Data.Text as Text
 import System.FilePath ((</>), (<.>))
 
 import Peer
-import Server
+import Server as Server
 
 
 -- Generate config
@@ -37,8 +38,8 @@ mullvadIPRange :: IPRange
 mullvadIPRange = "10.64.0.0/10"
 
 
-createConfig :: Peer -> Server -> Text
-createConfig Peer{ privateKey, ipv4Addr, ipv6Addr } Server{ publicKey, ipv4AddrIn } =
+create :: Peer -> Server -> Text
+create Peer{ privateKey, ipv4Addr, ipv6Addr } Server{ publicKey, ipv4AddrIn } =
   let
     allowedIPs = Set.insert mullvadIPRange publicIPRanges
 
@@ -67,16 +68,18 @@ createConfig Peer{ privateKey, ipv4Addr, ipv6Addr } Server{ publicKey, ipv4AddrI
     ]
 
 
-createConfigFile :: Peer -> Server -> FilePath -> IO ()
-createConfigFile peer server configPath =
+createAndWriteToFile :: FilePath -> Peer -> Server -> IO ()
+createAndWriteToFile filepath peer server =
   let
     newConfig =
-      createConfig peer server
+      create peer server
+
+    filePath =
+      filepath </> unpack prettyName <.> "conf"
 
     toUTF8 =
       UTF8.fromString . unpack
 
-    filePath =
-      configPath </> unpack (createName server) <.> "conf"
+    prettyName = Server.toPrettyName server
   in
     BS.writeFile filePath (toUTF8 newConfig)

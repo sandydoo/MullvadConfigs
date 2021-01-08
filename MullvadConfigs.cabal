@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: aa4c6b3820ca3199ee576f3739dcb4d8d9e1ca5878485af542989047f931be41
+-- hash: b2045db29826653f002bbcee940e7c6fa33b0dded351e145a221b4837f4552af
 
 name:           MullvadConfigs
 version:        0.1.0.0
@@ -26,13 +26,25 @@ source-repository head
 
 library
   exposed-modules:
-      Lib
+      ProcessConfigs
   other-modules:
       Paths_MullvadConfigs
   hs-source-dirs:
       src
   build-depends:
-      base >=4.7 && <5
+      aeson
+    , base >=4.7 && <5
+    , bytestring
+    , containers
+    , directory
+    , filepath
+    , http-conduit
+    , iproute
+    , lens
+    , lens-aeson
+    , text
+    , utf8-string
+    , zip
   default-language: Haskell2010
 
 executable MullvadConfigs-exe
@@ -44,7 +56,19 @@ executable MullvadConfigs-exe
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       MullvadConfigs
+    , aeson
     , base >=4.7 && <5
+    , bytestring
+    , containers
+    , directory
+    , filepath
+    , http-conduit
+    , iproute
+    , lens
+    , lens-aeson
+    , text
+    , utf8-string
+    , zip
   default-language: Haskell2010
 
 test-suite MullvadConfigs-test
@@ -57,5 +81,17 @@ test-suite MullvadConfigs-test
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       MullvadConfigs
+    , aeson
     , base >=4.7 && <5
+    , bytestring
+    , containers
+    , directory
+    , filepath
+    , http-conduit
+    , iproute
+    , lens
+    , lens-aeson
+    , text
+    , utf8-string
+    , zip
   default-language: Haskell2010

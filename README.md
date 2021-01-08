@@ -67,5 +67,5 @@ Run the program as a Stack script.
 [mullvad-url]: https://mullvad.net/
 [wireguard-config-generator]: https://mullvad.net/en/account/#/wireguard-config/
 
-[license-url]: https://github.com/sandydoo/MullvadConfigs/blob/main/LICENSE.md
+[license-url]: https://github.com/sandydoo/MullvadConfigs/blob/main/LICENSE
 [maintainer-url]: https://github.com/sandydoo/

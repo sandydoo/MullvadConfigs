@@ -32,7 +32,7 @@ main =
       currentPath <- FS.getCurrentDirectory
 
       forM_ peers $ \peer ->
-        do  let name = unpack $ Peer.name peer
+        do  let name = unpack (Peer.name peer)
             let configPath = currentPath </> "configs" </> name
 
             putStrLn $ "Creating configs for " <> name <> "..."

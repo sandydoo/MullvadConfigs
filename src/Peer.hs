@@ -13,8 +13,6 @@ import Data.IP
 import Data.Text
 import GHC.Generics
 
-
--- deriving instance FromJSON PortNumber
 import Data.CustomIP
 
 

@@ -1,15 +1,14 @@
-#!/usr/bin/env stack
-{- stack script
-    --ghc-options "-Wall"
-    --resolver lts-16.21
-    --package aeson,bytestring,containers,directory,filepath,http-conduit,iproute,lens,lens-aeson,text,utf8-string,zip
--}
-
-
 {-# LANGUAGE DeriveGeneric, NamedFieldPuns, OverloadedStrings, RecordWildCards, TemplateHaskell #-}
-import Codec.Archive.Zip as Zip
+module ProcessConfigs
+  ( createConfigFile
+  , filterServerList
+  , PeerInfo(..)
+  , readPeerInfo
+  )
+  where
+
+
 import Control.Lens hiding ((<.>))
-import Control.Monad (forM_)
 import Data.Aeson
 import Data.Aeson.Lens
 import Data.Aeson.TH
@@ -23,15 +22,9 @@ import qualified Data.Set as Set
 import           Data.Set (Set)
 import Data.Text as Text
 import GHC.Generics
-import qualified Network.HTTP.Simple as HTTP
 import Prelude hiding (writeFile, unlines)
-import qualified System.Directory as FS
 import System.FilePath ((</>), (<.>))
 
-
-
-serverListURL :: String
-serverListURL = "https://api.mullvad.net/www/relays/all/"
 
 
 preferredCountryCodes :: Set Text
@@ -246,33 +239,3 @@ readPeerInfo =
 
         _ ->
           return []
-
-
--- TODO: add some proper error handling.
-main :: IO ()
-main =
-  do  putStrLn "Fetching current server list..."
-
-      request <- HTTP.parseRequest serverListURL
-      serverList <- return . filterServerList . HTTP.getResponseBody =<< HTTP.httpBS request
-
-      putStrLn "Reading local peer list..."
-      peers <- readPeerInfo
-
-      currentPath <- FS.getCurrentDirectory
-
-      forM_ peers $ \peer ->
-        do  let name = unpack $ peerName peer
-            let configPath = currentPath </> "configs" </> name
-
-            putStrLn $ "Creating configs for " <> name <> "..."
-            FS.createDirectoryIfMissing True configPath
-
-            forM_ serverList $ \server ->
-              createConfigFile peer server configPath
-
-            putStrLn $ "Creating zip archive for " <> name <> "..."
-            Zip.createArchive (configPath <.> "zip") $
-              Zip.packDirRecur Zip.Deflate Zip.mkEntrySelector configPath
-
-      putStrLn "Configurations created."

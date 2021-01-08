@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: bec67824b95a3fa166298d4d17e7f902d553b71993f05e4a1a0ba6e78fd278d5
+-- hash: 88c3f5dabc7ad0afbd9e36ad6683b3dbb8167ed201421eb6228f1b756eb60c37
 
 name:           MullvadConfigs
 version:        0.1.0.0
@@ -57,7 +57,7 @@ executable MullvadConfigs-exe
       Paths_MullvadConfigs
   hs-source-dirs:
       app
-  ghc-options: -threaded -rtsopts -with-rtsopts=-N
+  ghc-options: -Wall -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       MullvadConfigs
     , aeson

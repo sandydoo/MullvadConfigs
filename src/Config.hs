@@ -19,6 +19,8 @@ import Server
 -- Generate config
 
 
+-- Explicitly send traffic for public IP ranges through the tunnel, excluding private / LAN ranges.
+-- To instead send everything through the tunnel: 0.0.0.0/0,::0/0
 publicIPRanges :: Set IPRange
 publicIPRanges =
   Set.fromList
@@ -60,8 +62,6 @@ createConfig Peer{ privateKey, ipv4Addr, ipv6Addr } Server{ publicKey, ipv4AddrI
     , ""
     , "[Peer]"
     , "PublicKey = " <> publicKey
-    -- Explicitly send traffic for public IP ranges through the tunnel, excluding private / LAN ranges.
-    -- To send instead everything through tunnel: 0.0.0.0/0,::0/0
     , "AllowedIPs = " <> serializeIPs allowedIPs
     , "Endpoint = " <> serialize ipv4AddrIn <> ":51820"
     ]

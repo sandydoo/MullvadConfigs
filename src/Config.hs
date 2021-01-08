@@ -46,19 +46,16 @@ createConfig Peer{ privateKey, ipv4Addr, ipv6Addr } Server{ publicKey, ipv4AddrI
 
     packIP :: IPRange -> Text -> Text
     packIP ip ips
-      | Text.null ips = fromIPRange ip <> ips
-      | otherwise     = fromIPRange ip <> ", " <> ips
+      | Text.null ips = serialize ip <> ips
+      | otherwise     = serialize ip <> ", " <> ips
 
-    fromIPRange :: IPRange -> Text
-    fromIPRange = Text.pack . show
-
-    showText :: Show a => a -> Text
-    showText = Text.pack . show
+    serialize :: Show a => a -> Text
+    serialize = Text.pack . show
   in
   Text.unlines $
     [ "[Interface]"
     , "PrivateKey = " <> privateKey
-    , "Address = " <> showText ipv4Addr <> "," <> showText ipv6Addr
+    , "Address = " <> serialize ipv4Addr <> "," <> serialize ipv6Addr
     , "DNS = 193.138.218.74"
     , ""
     , "[Peer]"
@@ -66,7 +63,7 @@ createConfig Peer{ privateKey, ipv4Addr, ipv6Addr } Server{ publicKey, ipv4AddrI
     -- Explicitly send traffic for public IP ranges through the tunnel, excluding private / LAN ranges.
     -- To send instead everything through tunnel: 0.0.0.0/0,::0/0
     , "AllowedIPs = " <> serializeIPs allowedIPs
-    , "Endpoint = " <> showText ipv4AddrIn <> ":51820"
+    , "Endpoint = " <> serialize ipv4AddrIn <> ":51820"
     ]
 
 

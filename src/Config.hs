@@ -35,8 +35,8 @@ mullvadIPRange :: IPRange
 mullvadIPRange = "10.64.0.0/10"
 
 
-createConfig :: PeerInfo -> ServerInfo -> Text
-createConfig PeerInfo{..} ServerInfo{..} =
+createConfig :: Peer -> Server -> Text
+createConfig Peer{ privateKey, ipv4Addr, ipv6Addr } Server{ publicKey, ipv4AddrIn } =
   let
     allowedIPs = Set.insert mullvadIPRange publicIPRanges
 
@@ -50,12 +50,15 @@ createConfig PeerInfo{..} ServerInfo{..} =
       | otherwise     = fromIPRange ip <> ", " <> ips
 
     fromIPRange :: IPRange -> Text
-    fromIPRange = pack . show
+    fromIPRange = Text.pack . show
+
+    showText :: Show a => a -> Text
+    showText = Text.pack . show
   in
   Text.unlines $
     [ "[Interface]"
-    , "PrivateKey = " <> peerPrivateKey
-    , "Address = " <> peerIpv4Addr <> "," <> peerIpv6Addr
+    , "PrivateKey = " <> privateKey
+    , "Address = " <> showText ipv4Addr <> "," <> showText ipv6Addr
     , "DNS = 193.138.218.74"
     , ""
     , "[Peer]"
@@ -63,11 +66,11 @@ createConfig PeerInfo{..} ServerInfo{..} =
     -- Explicitly send traffic for public IP ranges through the tunnel, excluding private / LAN ranges.
     -- To send instead everything through tunnel: 0.0.0.0/0,::0/0
     , "AllowedIPs = " <> serializeIPs allowedIPs
-    , "Endpoint = " <> ipv4AddrIn <> ":51820"
+    , "Endpoint = " <> showText ipv4AddrIn <> ":51820"
     ]
 
 
-createConfigFile :: PeerInfo -> ServerInfo -> FilePath -> IO ()
+createConfigFile :: Peer -> Server -> FilePath -> IO ()
 createConfigFile peer server configPath =
   let
     newConfig =

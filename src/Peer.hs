@@ -1,7 +1,7 @@
 {-# LANGUAGE DeriveGeneric, OverloadedStrings, RecordWildCards, TemplateHaskell #-}
 module Peer
-  ( PeerInfo(..)
-  , readPeerInfo
+  ( Peer(..)
+  , fromFile
   ) where
 
 
@@ -9,43 +9,48 @@ import Data.Aeson
 import Data.Aeson.Lens
 import Data.Aeson.TH
 import qualified Data.ByteString as BS
+import Data.IP
 import Data.Text
 import GHC.Generics
 
 
+-- deriving instance FromJSON PortNumber
+import Data.CustomIP
 
-data PeerInfo =
-  PeerInfo
-    { peerName       :: Text
-    , peerPublicKey  :: Text
-    , peerPrivateKey :: Text
-    , peerIpv4Addr   :: Text
-    , peerIpv6Addr   :: Text
-    , peerPorts      :: [Int]
+
+
+data Peer =
+  Peer
+    { name       :: Text
+    , publicKey  :: Text
+    , privateKey :: Text
+    , ipv4Addr   :: IPv4
+    , ipv6Addr   :: IPv6
+    , ports      :: [PortNumber]
     } deriving (Generic, Show)
 
 
-$(deriveToJSON defaultOptions ''PeerInfo)
+$(deriveToJSON defaultOptions ''Peer)
 
 
-instance FromJSON PeerInfo where
+instance FromJSON Peer where
   parseJSON =
-    withObject "PeerInfo" $ \o ->
-      do  peerName       <- o .: "name"
-          peerKey        <- o .: "key"
-          peerPublicKey  <- peerKey .: "public"
-          peerPrivateKey <- peerKey .: "private"
-          peerIpv4Addr   <- o .: "ipv4_address"
-          peerIpv6Addr   <- o .: "ipv6_address"
-          peerPorts      <- o .: "ports"
+    withObject "Peer" $ \o ->
+      do  name       <- o .: "name"
+          key        <- o .: "key"
+          publicKey  <- key .: "public"
+          privateKey <- key .: "private"
+          ipv4Addr   <- o .: "ipv4_address"
+          ipv6Addr   <- o .: "ipv6_address"
+          ports      <- o .: "ports"
 
-          return PeerInfo{..}
+          return Peer{..}
 
 
 
-readPeerInfo :: IO [PeerInfo]
-readPeerInfo =
-  BS.readFile(".peers.json") >>=
+fromFile :: String -> IO [Peer]
+fromFile filename =
+  BS.readFile filename >>=
     \bytestring ->
       case (decodeStrict bytestring) of
         Just peers ->

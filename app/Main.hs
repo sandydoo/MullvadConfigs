@@ -9,7 +9,7 @@ import qualified System.Directory as FS
 import System.FilePath ((</>), (<.>))
 
 import Config
-import Peer
+import Peer as Peer
 import Server
 
 
@@ -27,12 +27,12 @@ main =
       serverList <- return . filterServerList . HTTP.getResponseBody =<< HTTP.httpBS request
 
       putStrLn "Reading local peer list..."
-      peers <- readPeerInfo
+      peers <- Peer.fromFile ".peers.json"
 
       currentPath <- FS.getCurrentDirectory
 
       forM_ peers $ \peer ->
-        do  let name = unpack $ peerName peer
+        do  let name = unpack $ Peer.name peer
             let configPath = currentPath </> "configs" </> name
 
             putStrLn $ "Creating configs for " <> name <> "..."

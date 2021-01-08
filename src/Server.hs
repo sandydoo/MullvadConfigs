@@ -1,6 +1,6 @@
 {-# LANGUAGE DeriveGeneric, NamedFieldPuns, OverloadedStrings, TemplateHaskell #-}
 module Server
-  ( ServerInfo(..)
+  ( Server(..)
   , createName
   , filterServerList
   ) where
@@ -10,6 +10,7 @@ import Control.Lens
 import Data.Aeson
 import Data.Aeson.Lens
 import Data.Aeson.TH
+import Data.IP
 import qualified Data.Map as Map
 import           Data.Map (Map)
 import Data.Maybe (catMaybes, isJust)
@@ -18,15 +19,15 @@ import qualified Data.Set as Set
 import           Data.Set (Set)
 import Data.Text as Text
 
-
+import Data.CustomIP
 
 preferredCountryCodes :: Set Text
 preferredCountryCodes = Set.fromList [ "ch", "de", "gb", "nl", "se" ]
 
 
 
-data ServerInfo =
-  ServerInfo
+data Server =
+  Server
     { hostname     :: Text
     , countryCode  :: Text
     , countryName  :: Text
@@ -35,22 +36,22 @@ data ServerInfo =
     , active       :: Bool
     , owned        :: Bool
     , provider     :: Text
-    , ipv4AddrIn   :: Text
-    , ipv6AddrIn   :: Text
+    , ipv4AddrIn   :: IPv4
+    , ipv6AddrIn   :: IPv6
     , serverType   :: Text
     , publicKey    :: Text
-    , multihopPort :: Int
+    , multihopPort :: PortNumber
     , socksName    :: Text
     } deriving (Generic, Show)
 
 
-$(deriveToJSON defaultOptions ''ServerInfo)
+$(deriveToJSON defaultOptions ''Server)
 
 
-instance FromJSON ServerInfo where
+instance FromJSON Server where
   parseJSON =
-    withObject "ServerInfo" $ \o ->
-      ServerInfo
+    withObject "Server" $ \o ->
+      Server
         <$> o .: "hostname"
         <*> o .: "country_code"
         <*> o .: "country_name"
@@ -68,7 +69,7 @@ instance FromJSON ServerInfo where
 
 
 
-filterServerList :: AsValue s => s -> [ServerInfo]
+filterServerList :: AsValue s => s -> [Server]
 filterServerList serverList =
   serverList
   ^.. values
@@ -78,8 +79,8 @@ filterServerList serverList =
   . _JSON
 
 
-createName :: ServerInfo -> Text
-createName ServerInfo{ hostname, cityName, countryCode, owned } =
+createName :: Server -> Text
+createName Server{ hostname, cityName, countryCode, owned } =
   let
     countryEmoji =
       Map.lookup countryCode countryEmojis

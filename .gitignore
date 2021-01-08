@@ -1,2 +1,6 @@
 .peers.json
 configs
+
+# Stack
+.stack-work/
+*~

@@ -1,0 +1,40 @@
+name:                MullvadConfigs
+version:             0.1.0.0
+github:              "sandydoo/MullvadConfigs"
+license:             BSD3
+author:              "Sander Melnikov"
+maintainer:          "hey@sandydoo.me"
+copyright:           "© Sander Melnikov"
+
+extra-source-files:
+- README.md
+
+description:         Please see the README on GitHub at <https://github.com/sandydoo/MullvadConfigs#readme>
+
+dependencies:
+- base >= 4.7 && < 5
+
+library:
+  source-dirs: src
+
+executables:
+  MullvadConfigs-exe:
+    main:                Main.hs
+    source-dirs:         app
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - MullvadConfigs
+
+tests:
+  MullvadConfigs-test:
+    main:                Spec.hs
+    source-dirs:         test
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - MullvadConfigs

@@ -13,6 +13,18 @@ description:         Please see the README on GitHub at <https://github.com/sand
 
 dependencies:
 - base >= 4.7 && < 5
+- aeson
+- bytestring
+- containers
+- directory
+- filepath
+- http-conduit
+- iproute
+- lens
+- lens-aeson
+- text
+- utf8-string
+- zip
 
 library:
   source-dirs: src

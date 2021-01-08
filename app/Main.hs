@@ -8,7 +8,9 @@ import qualified Network.HTTP.Simple as HTTP
 import qualified System.Directory as FS
 import System.FilePath ((</>), (<.>))
 
-import ProcessConfigs
+import Config
+import Peer
+import Server
 
 
 

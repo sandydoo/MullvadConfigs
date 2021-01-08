@@ -20,6 +20,9 @@ import           Data.Set (Set)
 import Data.Text as Text
 
 import Data.CustomIP
+import Data.CountryFlag as CountryFlag
+
+
 
 preferredCountryCodes :: Set Text
 preferredCountryCodes = Set.fromList [ "ch", "de", "gb", "nl", "se" ]
@@ -83,7 +86,7 @@ createName :: Server -> Text
 createName Server{ hostname, cityName, countryCode, owned } =
   let
     countryEmoji =
-      Map.lookup countryCode countryEmojis
+      CountryFlag.fromCountryCode countryCode
 
     lowerCityName =
       Just $ Text.toLower cityName
@@ -99,20 +102,6 @@ createName Server{ hostname, cityName, countryCode, owned } =
 
   in
     Text.intercalate "-" . catMaybes $ nameList
-
-
-
-type Emoji = Text
-
-countryEmojis :: Map Text Emoji
-countryEmojis =
-  Map.fromList
-    [ ( "ch", "🇨🇭" )
-    , ( "de", "🇩🇪" )
-    , ( "gb", "🇬🇧" )
-    , ( "nl", "🇳🇱" )
-    , ( "se", "🇸🇪" )
-    ]
 
 
 

@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: b730594a3383a8da9a981ba0b0a35e5e8d1cf4e17a10884b58865ca73a8e00a7
+-- hash: bec67824b95a3fa166298d4d17e7f902d553b71993f05e4a1a0ba6e78fd278d5
 
 name:           MullvadConfigs
 version:        0.1.0.0
@@ -27,6 +27,7 @@ source-repository head
 library
   exposed-modules:
       Config
+      Data.CountryFlag
       Data.CustomIP
       Peer
       Server

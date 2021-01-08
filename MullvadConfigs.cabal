@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: b2045db29826653f002bbcee940e7c6fa33b0dded351e145a221b4837f4552af
+-- hash: ed391d9f86ab91547efb8d7b20fd1ab16d0385ffe58c4fc683c68d39eb083663
 
 name:           MullvadConfigs
 version:        0.1.0.0
@@ -26,7 +26,10 @@ source-repository head
 
 library
   exposed-modules:
+      Config
+      Peer
       ProcessConfigs
+      Server
   other-modules:
       Paths_MullvadConfigs
   hs-source-dirs:

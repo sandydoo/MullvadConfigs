@@ -22,8 +22,8 @@ data Peer =
     { name       :: Text
     , publicKey  :: Text
     , privateKey :: Text
-    , ipv4Addr   :: IPv4
-    , ipv6Addr   :: IPv6
+    , ipv4Addr   :: IPRange
+    , ipv6Addr   :: IPRange
     , ports      :: [PortNumber]
     } deriving (Generic, Show)
 

@@ -36,10 +36,8 @@ Create a JSON file called `.peers.json` in the same directory following this for
 [
   {
     "name": "<Device name>",
-    "key": {
-      "public": "<Public key>",
-      "private": "<Private key>"
-    },
+    "public_key": "<Public key>",
+    "private_key": "<Private key>",
     "ipv4_address": "<IPv4 address>",
     "ipv6_address": "<IPv6 address>",
     "ports": [

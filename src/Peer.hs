@@ -35,9 +35,8 @@ instance FromJSON Peer where
   parseJSON =
     withObject "Peer" $ \o ->
       do  name       <- o .: "name"
-          key        <- o .: "key"
-          publicKey  <- key .: "public"
-          privateKey <- key .: "private"
+          publicKey  <- o .: "public_key"
+          privateKey <- o .: "private_key"
           ipv4Addr   <- o .: "ipv4_address"
           ipv6Addr   <- o .: "ipv6_address"
           ports      <- o .: "ports"

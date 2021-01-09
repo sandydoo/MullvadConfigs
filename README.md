@@ -28,7 +28,7 @@ Mullvad constantly updates their available servers. If, for whatever reason, you
 
 ## Usage
 
-You need to have [Stack](https://docs.haskellstack.org/en/stable/README/) installed.
+You need to have [Stack](stack-url) installed.
 
 Create a JSON file called `.peers.json` in the same directory following this format:
 
@@ -51,10 +51,10 @@ Create a JSON file called `.peers.json` in the same directory following this for
 
 The IP addresses are specific to your peer. The easiest way to find out yours is by looking at the [configuration generated on the Mullvad website.][wireguard-config-generator]
 
-Run the program as a Stack script.
+Run the program using Stack.
 
 ```sh
-./ProcessConfigs.hs
+stack run
 ```
 
 
@@ -66,6 +66,7 @@ Run the program as a Stack script.
 [wireguard-url]: https://www.wireguard.com/
 [mullvad-url]: https://mullvad.net/
 [wireguard-config-generator]: https://mullvad.net/en/account/#/wireguard-config/
+[stack-url]: https://docs.haskellstack.org/en/stable/README/
 
 [license-url]: https://github.com/sandydoo/MullvadConfigs/blob/main/LICENSE
 [maintainer-url]: https://github.com/sandydoo/

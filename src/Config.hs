@@ -44,8 +44,8 @@ mullvadIPRange = "10.64.0.0/10"
 
 
 
-create :: Peer -> Server -> Config
-create Peer{ privateKey, ipv4Addr, ipv6Addr } Server{ publicKey, ipv4AddrIn } =
+create :: Peer -> Server -> (Text, Config)
+create Peer{ privateKey, ipv4Addr, ipv6Addr } server@Server{ publicKey, ipv4AddrIn } =
   let
     allowedIPs = Set.insert mullvadIPRange publicIPRanges
 
@@ -60,28 +60,30 @@ create Peer{ privateKey, ipv4Addr, ipv6Addr } Server{ publicKey, ipv4AddrIn } =
 
     serialize :: Show a => a -> Text
     serialize = Text.pack . show
+
+    configName = Server.toPrettyName server
+
+    config =
+      Text.unlines $
+        [ "[Interface]"
+        , "PrivateKey = " <> privateKey
+        , "Address = " <> serialize ipv4Addr <> "," <> serialize ipv6Addr
+        , "DNS = 193.138.218.74"
+        , ""
+        , "[Peer]"
+        , "PublicKey = " <> publicKey
+        , "AllowedIPs = " <> serializeIPs allowedIPs
+        , "Endpoint = " <> serialize ipv4AddrIn <> ":51820"
+        ]
   in
-  Config $
-    Text.unlines $
-      [ "[Interface]"
-      , "PrivateKey = " <> privateKey
-      , "Address = " <> serialize ipv4Addr <> "," <> serialize ipv6Addr
-      , "DNS = 193.138.218.74"
-      , ""
-      , "[Peer]"
-      , "PublicKey = " <> publicKey
-      , "AllowedIPs = " <> serializeIPs allowedIPs
-      , "Endpoint = " <> serialize ipv4AddrIn <> ":51820"
-      ]
+  (configName, Config config)
 
 
-writeToFile :: FilePath -> Config -> IO ()
-writeToFile directory (Config config) =
+writeToFile :: FilePath -> (Text, Config) -> IO ()
+writeToFile directory (configName, Config config) =
   let
-    prettyName = Server.toPrettyName server
-
     filePath =
-      directory </> unpack prettyName <.> "conf"
+      directory </> unpack configName <.> "conf"
 
     toUTF8 =
       UTF8.fromString . unpack

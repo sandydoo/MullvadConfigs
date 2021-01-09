@@ -7,11 +7,11 @@ module Config
 
 
 import qualified Data.ByteString as BS
-import qualified Data.ByteString.UTF8 as UTF8
 import Data.IP (IPRange)
 import qualified Data.Set as Set
 import           Data.Set (Set)
 import Data.Text as Text
+import Data.Text.Encoding (encodeUtf8)
 import System.FilePath ((</>), (<.>))
 
 import Peer
@@ -84,8 +84,5 @@ writeToFile directory (configName, Config config) =
   let
     filePath =
       directory </> unpack configName <.> "conf"
-
-    toUTF8 =
-      UTF8.fromString . unpack
   in
-    BS.writeFile filePath (toUTF8 config)
+    BS.writeFile filePath (encodeUtf8 config)

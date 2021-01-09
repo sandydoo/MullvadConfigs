@@ -23,7 +23,6 @@ dependencies:
 - lens
 - lens-aeson
 - text
-- utf8-string
 - zip
 
 library:

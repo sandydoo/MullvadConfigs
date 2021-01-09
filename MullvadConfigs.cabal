@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 88c3f5dabc7ad0afbd9e36ad6683b3dbb8167ed201421eb6228f1b756eb60c37
+-- hash: c429d10edcbd0429e098a91f25e3fd54ed6abbb0c819a8ed3296fd89ed11469a
 
 name:           MullvadConfigs
 version:        0.1.0.0
@@ -47,7 +47,6 @@ library
     , lens
     , lens-aeson
     , text
-    , utf8-string
     , zip
   default-language: Haskell2010
 
@@ -71,7 +70,6 @@ executable MullvadConfigs-exe
     , lens
     , lens-aeson
     , text
-    , utf8-string
     , zip
   default-language: Haskell2010
 
@@ -96,6 +94,5 @@ test-suite MullvadConfigs-test
     , lens
     , lens-aeson
     , text
-    , utf8-string
     , zip
   default-language: Haskell2010

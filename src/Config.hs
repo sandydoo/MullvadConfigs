@@ -14,7 +14,7 @@ import Data.Text as Text
 import System.FilePath ((</>), (<.>))
 
 import Peer
-import Server as Server
+import Server
 
 
 -- Generate config

@@ -1,30 +1,31 @@
+{-# LANGUAGE OverloadedStrings #-}
 module Main where
 
 
 import Codec.Archive.Zip as Zip
 import Control.Monad (forM_)
+import qualified Data.Set as Set
+import           Data.Set (Set)
 import Data.Text as Text
-import qualified Network.HTTP.Simple as HTTP
 import qualified System.Directory as FS
 import System.FilePath ((</>), (<.>))
 
-import Config
-import Peer   as Peer
-import Server as Server
+import qualified Config
+import qualified Peer
+import qualified Server
 
 
 
-serverListURL :: String
-serverListURL = "https://api.mullvad.net/www/relays/all/"
+preferredCountryCodes :: Set Text
+preferredCountryCodes = Set.fromList [ "ch", "de", "gb", "nl", "se" ]
+
 
 
 -- TODO: add some proper error handling.
 main :: IO ()
 main =
   do  putStrLn "Fetching current server list..."
-
-      request <- HTTP.parseRequest serverListURL
-      serverList <- return . filterServerList . HTTP.getResponseBody =<< HTTP.httpBS request
+      servers <- Server.fetchPreferred preferredCountryCodes
 
       putStrLn "Reading local peer list..."
       peers <- Peer.fromFile ".peers.json"
@@ -38,7 +39,7 @@ main =
             putStrLn $ "Creating configs for " <> clientName <> "..."
             FS.createDirectoryIfMissing True configPath
 
-            forM_ serverList $ \server ->
+            forM_ servers $ \server ->
               Config.createAndWriteToFile configPath peer server
 
             putStrLn $ "Creating zip archive for " <> clientName <> "..."

@@ -1,8 +1,8 @@
 {-# LANGUAGE DeriveGeneric, NamedFieldPuns, OverloadedStrings, TemplateHaskell #-}
 module Server
   ( Server(..)
+  , fetchPreferred
   , toPrettyName
-  , filterServerList
   ) where
 
 
@@ -11,21 +11,41 @@ import Data.Aeson
 import Data.Aeson.Lens
 import Data.Aeson.TH
 import Data.IP
-import qualified Data.Map as Map
-import           Data.Map (Map)
 import Data.Maybe (catMaybes, isJust)
 import GHC.Generics
-import qualified Data.Set as Set
-import           Data.Set (Set)
+import Data.Set (Set)
 import Data.Text as Text
+import qualified Network.HTTP.Simple as HTTP
 
 import Data.CustomIP
 import Data.CountryFlag as CountryFlag
 
 
 
-preferredCountryCodes :: Set Text
-preferredCountryCodes = Set.fromList [ "ch", "de", "gb", "nl", "se" ]
+filterRawServerList :: AsValue s => Set Text -> s -> [Server]
+filterRawServerList preferredCountryCodes rawServerList =
+  let
+    isPreferredCountry :: Text -> Maybe ()
+    isPreferredCountry code = preferredCountryCodes ^? ix code
+
+    countryCode :: AsValue s => s -> Maybe Text
+    countryCode server = server ^? key "country_code" . _String
+  in
+  rawServerList
+    ^.. values
+    . filteredBy (key "type"   . _String . only "wireguard")
+    . filteredBy (key "active" . _Bool   . only True)
+    . filtered (\server -> isJust $ isPreferredCountry =<< countryCode server)
+    . _JSON
+
+
+fetchPreferred :: Set Text -> IO [Server]
+fetchPreferred preferredCountryCodes =
+  do  let serversFromJSON = filterRawServerList preferredCountryCodes
+      request <- HTTP.parseRequest "https://api.mullvad.net/www/relays/all/"
+      response <- HTTP.getResponseBody <$> HTTP.httpBS request
+
+      return $ serversFromJSON response
 
 
 
@@ -72,16 +92,6 @@ instance FromJSON Server where
 
 
 
-filterServerList :: AsValue s => s -> [Server]
-filterServerList serverList =
-  serverList
-  ^.. values
-  . filteredBy (key "type"   . _String . only "wireguard")
-  . filteredBy (key "active" . _Bool   . only True)
-  . filtered (\server -> isJust $ isPreferredCountryCode =<< getCountryCode server)
-  . _JSON
-
-
 toPrettyName :: Server -> Text
 toPrettyName Server{ hostname, cityName, countryCode, owned } =
   let
@@ -102,15 +112,3 @@ toPrettyName Server{ hostname, cityName, countryCode, owned } =
 
   in
     Text.intercalate "-" . catMaybes $ nameList
-
-
-
--- Lens helpers
-
-
-getCountryCode :: AsValue s => s -> Maybe Text
-getCountryCode server = server ^? key "country_code" . _String
-
-
-isPreferredCountryCode :: Text -> Maybe ()
-isPreferredCountryCode code = preferredCountryCodes ^? ix code

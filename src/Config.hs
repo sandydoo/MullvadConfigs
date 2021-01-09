@@ -1,7 +1,8 @@
 {-# LANGUAGE NamedFieldPuns, OverloadedStrings, RecordWildCards #-}
 module Config
-  ( create
-  , createAndWriteToFile
+  ( Config
+  , create
+  , writeToFile
   ) where
 
 
@@ -17,7 +18,11 @@ import Peer
 import Server
 
 
+
 -- Generate config
+
+
+newtype Config = Config Text deriving (Show)
 
 
 -- Explicitly send traffic for public IP ranges through the tunnel, excluding private / LAN ranges.
@@ -38,7 +43,8 @@ mullvadIPRange :: IPRange
 mullvadIPRange = "10.64.0.0/10"
 
 
-create :: Peer -> Server -> Text
+
+create :: Peer -> Server -> Config
 create Peer{ privateKey, ipv4Addr, ipv6Addr } Server{ publicKey, ipv4AddrIn } =
   let
     allowedIPs = Set.insert mullvadIPRange publicIPRanges
@@ -55,31 +61,29 @@ create Peer{ privateKey, ipv4Addr, ipv6Addr } Server{ publicKey, ipv4AddrIn } =
     serialize :: Show a => a -> Text
     serialize = Text.pack . show
   in
-  Text.unlines $
-    [ "[Interface]"
-    , "PrivateKey = " <> privateKey
-    , "Address = " <> serialize ipv4Addr <> "," <> serialize ipv6Addr
-    , "DNS = 193.138.218.74"
-    , ""
-    , "[Peer]"
-    , "PublicKey = " <> publicKey
-    , "AllowedIPs = " <> serializeIPs allowedIPs
-    , "Endpoint = " <> serialize ipv4AddrIn <> ":51820"
-    ]
+  Config $
+    Text.unlines $
+      [ "[Interface]"
+      , "PrivateKey = " <> privateKey
+      , "Address = " <> serialize ipv4Addr <> "," <> serialize ipv6Addr
+      , "DNS = 193.138.218.74"
+      , ""
+      , "[Peer]"
+      , "PublicKey = " <> publicKey
+      , "AllowedIPs = " <> serializeIPs allowedIPs
+      , "Endpoint = " <> serialize ipv4AddrIn <> ":51820"
+      ]
 
 
-createAndWriteToFile :: FilePath -> Peer -> Server -> IO ()
-createAndWriteToFile filepath peer server =
+writeToFile :: FilePath -> Config -> IO ()
+writeToFile directory (Config config) =
   let
-    newConfig =
-      create peer server
+    prettyName = Server.toPrettyName server
 
     filePath =
-      filepath </> unpack prettyName <.> "conf"
+      directory </> unpack prettyName <.> "conf"
 
     toUTF8 =
       UTF8.fromString . unpack
-
-    prettyName = Server.toPrettyName server
   in
-    BS.writeFile filePath (toUTF8 newConfig)
+    BS.writeFile filePath (toUTF8 config)

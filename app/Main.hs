@@ -40,7 +40,8 @@ main =
             FS.createDirectoryIfMissing True configPath
 
             forM_ servers $ \server ->
-              Config.createAndWriteToFile configPath peer server
+              Config.writeToFile configPath $
+                Config.create peer server
 
             putStrLn $ "Creating zip archive for " <> clientName <> "..."
             Zip.createArchive (configPath <.> "zip") $

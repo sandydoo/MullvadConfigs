@@ -9,11 +9,10 @@ import Data.Aeson
 import Data.Aeson.Lens
 import Data.Aeson.TH
 import qualified Data.ByteString as BS
-import Data.IP
 import Data.Text
 import GHC.Generics
 
-import Data.CustomIP
+import Data.Network
 
 
 

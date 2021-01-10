@@ -10,14 +10,13 @@ import Control.Lens
 import Data.Aeson
 import Data.Aeson.Lens
 import Data.Aeson.TH
-import Data.IP
 import Data.Maybe (catMaybes, isJust)
 import GHC.Generics
 import Data.Set (Set)
 import Data.Text as Text
 import qualified Network.HTTP.Simple as HTTP
 
-import Data.CustomIP
+import Data.Network
 import Data.CountryFlag as CountryFlag
 
 

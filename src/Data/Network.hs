@@ -1,6 +1,7 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
-module Data.CustomIP
+module Data.Network
   ( PortNumber
+  , module Data.IP
   ) where
 
 import Data.Aeson
@@ -12,16 +13,20 @@ import Data.Word
 
 
 
-parseFromText :: (Read a, MonadFail m) => String -> Text -> m a
-parseFromText error w =
-  case readMaybe (unpack w) of
-    Nothing -> fail error
-    Just v -> return v
+newtype PortNumber =
+  PortNumber Word16
+  deriving (Eq, Ord, Num, Enum, Bounded, Real, Integral, Show)
 
 
-toString :: Show a => a -> Value
-toString = String . pack . show
+instance FromJSON PortNumber where
+  parseJSON w = parseJSON w >>= \w -> return $ PortNumber w
 
+instance ToJSON PortNumber where
+  toJSON (PortNumber port) = toJSON port
+
+
+
+-- JSON instances for IP addresses
 
 
 instance FromJSON IPRange where
@@ -45,13 +50,19 @@ instance ToJSON IPv6 where
   toJSON = toString
 
 
-newtype PortNumber =
-  PortNumber Word16
-  deriving (Eq, Ord, Num, Enum, Bounded, Real, Integral, Show)
+
+-- Helpers
 
 
-instance FromJSON PortNumber where
-  parseJSON w = parseJSON w >>= \w -> return $ PortNumber w
+parseFromText :: (Read a, MonadFail m) => String -> Text -> m a
+parseFromText error w =
+  case readMaybe (unpack w) of
+    Nothing ->
+      fail error
 
-instance ToJSON PortNumber where
-  toJSON (PortNumber port) = toJSON port
+    Just v  ->
+      return v
+
+
+toString :: Show a => a -> Value
+toString = String . pack . show

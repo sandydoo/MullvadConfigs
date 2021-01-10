@@ -7,13 +7,13 @@ module Config
 
 
 import qualified Data.ByteString as BS
-import Data.IP (IPRange)
 import qualified Data.Set as Set
 import           Data.Set (Set)
 import Data.Text as Text
 import Data.Text.Encoding (encodeUtf8)
 import System.FilePath ((</>), (<.>))
 
+import Data.Network
 import Peer
 import Server
 

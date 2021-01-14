@@ -4,7 +4,7 @@ cabal-version: 2.0
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 880f551ca82ab1dde2e3e098403867d710e02727c25b9648c334fa16c1eef216
+-- hash: 72998e1a8496295fad529b74368b5158ebc263a99d889afaca3157807638ab34
 
 name:           MullvadConfigs
 version:        0.1.0.0
@@ -13,7 +13,7 @@ homepage:       https://github.com/sandydoo/MullvadConfigs#readme
 bug-reports:    https://github.com/sandydoo/MullvadConfigs/issues
 author:         Sander Melnikov
 maintainer:     hey@sandydoo.me
-copyright:      © Sander Melnikov
+copyright:      © 2020-present Sander Melnikov
 license:        BSD3
 license-file:   LICENSE
 build-type:     Simple
@@ -35,7 +35,7 @@ library
       Paths_MullvadConfigs
   hs-source-dirs:
       src
-  default-extensions: OverloadedStrings
+  default-extensions: NamedFieldPuns OverloadedStrings RecordWildCards
   ghc-options: -Wall
   build-depends:
       aeson
@@ -56,13 +56,13 @@ library
     , relude (Relude as Prelude)
   default-language: Haskell2010
 
-executable MullvadConfigs-exe
+executable create-mullvad-configs
   main-is: Main.hs
   other-modules:
       Paths_MullvadConfigs
   hs-source-dirs:
       app
-  default-extensions: OverloadedStrings
+  default-extensions: NamedFieldPuns OverloadedStrings RecordWildCards
   ghc-options: -Wall -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       MullvadConfigs
@@ -91,7 +91,7 @@ test-suite MullvadConfigs-test
       Paths_MullvadConfigs
   hs-source-dirs:
       test
-  default-extensions: OverloadedStrings
+  default-extensions: NamedFieldPuns OverloadedStrings RecordWildCards
   ghc-options: -Wall -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       MullvadConfigs

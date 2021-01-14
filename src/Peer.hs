@@ -1,4 +1,4 @@
-{-# LANGUAGE DeriveGeneric, RecordWildCards, TemplateHaskell #-}
+{-# LANGUAGE DeriveGeneric, TemplateHaskell #-}
 module Peer
   ( Peer(..)
   , fromFile

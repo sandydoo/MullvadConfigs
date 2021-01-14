@@ -1,4 +1,4 @@
-{-# LANGUAGE DeriveGeneric, NamedFieldPuns, RecordWildCards, TemplateHaskell #-}
+{-# LANGUAGE DeriveGeneric, TemplateHaskell #-}
 module Server
   ( Server(..)
   , fetchPreferred

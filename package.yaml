@@ -1,18 +1,18 @@
-name:                MullvadConfigs
-version:             0.1.0.0
-github:              "sandydoo/MullvadConfigs"
-license:             BSD3
-author:              "Sander Melnikov"
-maintainer:          "hey@sandydoo.me"
-copyright:           "© Sander Melnikov"
+name: MullvadConfigs
+version: 0.1.0.0
+github: "sandydoo/MullvadConfigs"
+license: BSD3
+author: "Sander Melnikov"
+maintainer: "hey@sandydoo.me"
+copyright: "© 2020-present Sander Melnikov"
 
 extra-source-files:
 - README.md
 
-description:         Please see the README on GitHub at <https://github.com/sandydoo/MullvadConfigs#readme>
+description: Please see the README on GitHub at <https://github.com/sandydoo/MullvadConfigs#readme>
 
 ghc-options: -Wall
-default-extensions: OverloadedStrings 
+default-extensions: NamedFieldPuns OverloadedStrings RecordWildCards
 
 dependencies:
 - name: base
@@ -38,9 +38,9 @@ library:
   source-dirs: src
 
 executables:
-  MullvadConfigs-exe:
-    main:                Main.hs
-    source-dirs:         app
+  create-mullvad-configs:
+    main: Main.hs
+    source-dirs: app
     ghc-options:
     - -threaded
     - -rtsopts
@@ -50,8 +50,8 @@ executables:
 
 tests:
   MullvadConfigs-test:
-    main:                Spec.hs
-    source-dirs:         test
+    main: Spec.hs
+    source-dirs: test
     ghc-options:
     - -threaded
     - -rtsopts

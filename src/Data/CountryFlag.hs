@@ -7,11 +7,11 @@ import qualified Data.Map as Map
 
 
 
+type Flag = Text
+
+
 fromCountryCode :: Text -> Maybe Flag
 fromCountryCode code = Map.lookup code countryFlags
-
-
-type Flag = Text
 
 
 countryFlags :: Map Text Flag

@@ -37,11 +37,10 @@ filterRawServerList preferredCountryCodes rawServerList =
 
 fetchPreferred :: Set Text -> IO [Server]
 fetchPreferred preferredCountryCodes =
-  do  let serversFromJSON = filterRawServerList preferredCountryCodes
-      request <- HTTP.parseRequest "https://api.mullvad.net/www/relays/all/"
+  do  request <- HTTP.parseRequest "https://api.mullvad.net/www/relays/all/"
       response <- HTTP.getResponseBody <$> HTTP.httpBS request
 
-      return $ serversFromJSON response
+      return $ filterRawServerList preferredCountryCodes response
 
 
 
@@ -89,22 +88,18 @@ instance FromJSON Server where
 
 
 toPrettyName :: Server -> Text
-toPrettyName Server{ hostname, cityName, countryCode, owned } =
+toPrettyName Server{..} =
   let
-    countryEmoji =
-      CountryFlag.fromCountryCode countryCode
+    lowerCityName = Text.toLower cityName
 
-    lowerCityName =
-      Just $ Text.toLower cityName
+    serverCode = Text.takeWhile (/= '-') hostname
 
-    serverCode =
-      Just $ Text.takeWhile (/= '-') hostname
+    maybeCountryEmoji = CountryFlag.fromCountryCode countryCode
 
-    preferredServer =
-      if owned then Just "🌟" else Nothing
+    maybePreferredServer = if owned then Just "🌟" else Nothing
 
     nameList =
-      [ countryEmoji, lowerCityName, serverCode, preferredServer ]
+      [ maybeCountryEmoji, Just lowerCityName, Just serverCode, maybePreferredServer ]
 
   in
     Text.intercalate "-" . catMaybes $ nameList

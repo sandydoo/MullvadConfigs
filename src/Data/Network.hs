@@ -16,7 +16,9 @@ newtype PortNumber =
 
 
 instance FromJSON PortNumber where
-  parseJSON w = parseJSON w >>= \w -> return $ PortNumber w
+  parseJSON w =
+    do  word16 <- parseJSON w
+        return (PortNumber word16)
 
 instance ToJSON PortNumber where
   toJSON (PortNumber port) = toJSON port
@@ -30,21 +32,30 @@ instance FromJSON IPRange where
   parseJSON (String w) = parseFromText "Couln't parse IPRange" w
 
 instance ToJSON IPRange where
-  toJSON = toString
+  toJSON = toJSONString
+
+instance ToText IPRange where
+  toText = pack . show
 
 
 instance FromJSON IPv4 where
   parseJSON (String w) = parseFromText "Couln't parse IPv4" w
 
 instance ToJSON IPv4 where
-  toJSON = toString
+  toJSON = toJSONString
+
+instance ToText IPv4 where
+  toText = pack . show
 
 
 instance FromJSON IPv6 where
   parseJSON (String w) = parseFromText "Couln't parse IPv6" w
 
 instance ToJSON IPv6 where
-  toJSON = toString
+  toJSON = toJSONString
+
+instance ToText IPv6 where
+  toText = pack . show
 
 
 
@@ -52,14 +63,14 @@ instance ToJSON IPv6 where
 
 
 parseFromText :: (Read a, MonadFail m) => String -> Text -> m a
-parseFromText error w =
+parseFromText err w =
   case readMaybe (unpack w) of
     Nothing ->
-      fail error
+      fail err
 
     Just v  ->
       return v
 
 
-toString :: Show a => a -> Value
-toString = String . pack . show
+toJSONString :: Show a => a -> Value
+toJSONString = String . pack . show

@@ -4,7 +4,7 @@ cabal-version: 2.0
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 0dc4189c608c60fd07ffd032ead3abf9850058a5c1170a5364743784a3ef1b90
+-- hash: 880f551ca82ab1dde2e3e098403867d710e02727c25b9648c334fa16c1eef216
 
 name:           MullvadConfigs
 version:        0.1.0.0
@@ -35,7 +35,8 @@ library
       Paths_MullvadConfigs
   hs-source-dirs:
       src
-  ghc-options: -Wall -XOverloadedStrings
+  default-extensions: OverloadedStrings
+  ghc-options: -Wall
   build-depends:
       aeson
     , base >=4.7 && <5
@@ -61,7 +62,8 @@ executable MullvadConfigs-exe
       Paths_MullvadConfigs
   hs-source-dirs:
       app
-  ghc-options: -Wall -XOverloadedStrings -threaded -rtsopts -with-rtsopts=-N
+  default-extensions: OverloadedStrings
+  ghc-options: -Wall -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       MullvadConfigs
     , aeson
@@ -89,7 +91,8 @@ test-suite MullvadConfigs-test
       Paths_MullvadConfigs
   hs-source-dirs:
       test
-  ghc-options: -Wall -XOverloadedStrings -threaded -rtsopts -with-rtsopts=-N
+  default-extensions: OverloadedStrings
+  ghc-options: -Wall -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       MullvadConfigs
     , aeson

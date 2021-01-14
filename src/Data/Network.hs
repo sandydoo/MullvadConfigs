@@ -5,11 +5,8 @@ module Data.Network
   ) where
 
 import Data.Aeson
-import Data.Aeson.TH
 import Data.IP
 import Data.Text
-import Text.Read (readMaybe)
-import Data.Word
 
 
 

@@ -1,4 +1,4 @@
-{-# LANGUAGE DeriveGeneric, OverloadedStrings, RecordWildCards, TemplateHaskell #-}
+{-# LANGUAGE DeriveGeneric, RecordWildCards, TemplateHaskell #-}
 module Peer
   ( Peer(..)
   , fromFile
@@ -6,11 +6,8 @@ module Peer
 
 
 import Data.Aeson
-import Data.Aeson.Lens
 import Data.Aeson.TH
 import qualified Data.ByteString as BS
-import Data.Text
-import GHC.Generics
 
 import Data.Network
 

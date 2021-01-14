@@ -1,11 +1,8 @@
-{-# LANGUAGE OverloadedStrings #-}
 module Main where
 
 
 import Codec.Archive.Zip as Zip
-import Control.Monad (forM_)
 import qualified Data.Set as Set
-import           Data.Set (Set)
 import Data.Text as Text
 import qualified System.Directory as FS
 import System.FilePath ((</>), (<.>))

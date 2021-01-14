@@ -1,4 +1,4 @@
-{-# LANGUAGE NamedFieldPuns, OverloadedStrings, RecordWildCards #-}
+{-# LANGUAGE NamedFieldPuns, RecordWildCards #-}
 module Config
   ( Config
   , create
@@ -9,8 +9,7 @@ module Config
 import qualified Data.ByteString as BS
 import qualified Data.Set as Set
 import           Data.Set (Set)
-import Data.Text as Text
-import Data.Text.Encoding (encodeUtf8)
+import Data.Text as Text hiding (map)
 import System.FilePath ((</>), (<.>))
 
 import Data.Network
@@ -50,16 +49,7 @@ create Peer{ privateKey, ipv4Addr, ipv6Addr } server@Server{ publicKey, ipv4Addr
     allowedIPs = Set.insert mullvadIPRange publicIPRanges
 
     serializeIPs :: Set IPRange -> Text
-    serializeIPs ips =
-      Set.foldr packIP "" ips
-
-    packIP :: IPRange -> Text -> Text
-    packIP ip ips
-      | Text.null ips = serialize ip <> ips
-      | otherwise     = serialize ip <> ", " <> ips
-
-    serialize :: Show a => a -> Text
-    serialize = Text.pack . show
+    serializeIPs = Text.intercalate ", " . map toText . Set.toList
 
     configName = Server.toPrettyName server
 
@@ -67,13 +57,13 @@ create Peer{ privateKey, ipv4Addr, ipv6Addr } server@Server{ publicKey, ipv4Addr
       Text.unlines $
         [ "[Interface]"
         , "PrivateKey = " <> privateKey
-        , "Address = " <> serialize ipv4Addr <> "," <> serialize ipv6Addr
+        , "Address = " <> toText ipv4Addr <> "," <> toText ipv6Addr
         , "DNS = 193.138.218.74"
         , ""
         , "[Peer]"
         , "PublicKey = " <> publicKey
         , "AllowedIPs = " <> serializeIPs allowedIPs
-        , "Endpoint = " <> serialize ipv4AddrIn <> ":51820"
+        , "Endpoint = " <> toText ipv4AddrIn <> ":51820"
         ]
   in
   (configName, Config config)
@@ -82,7 +72,6 @@ create Peer{ privateKey, ipv4Addr, ipv6Addr } server@Server{ publicKey, ipv4Addr
 writeToFile :: FilePath -> (Text, Config) -> IO ()
 writeToFile directory (configName, Config config) =
   let
-    filePath =
-      directory </> unpack configName <.> "conf"
+    filePath = directory </> unpack configName <.> "conf"
   in
     BS.writeFile filePath (encodeUtf8 config)

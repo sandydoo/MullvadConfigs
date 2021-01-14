@@ -1,12 +1,9 @@
-{-# LANGUAGE OverloadedStrings #-}
 module Data.CountryFlag
   ( fromCountryCode
   ) where
 
 
-import Data.Map (Map)
 import qualified Data.Map as Map
-import Data.Text
 
 
 

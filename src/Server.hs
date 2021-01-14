@@ -1,4 +1,4 @@
-{-# LANGUAGE DeriveGeneric, NamedFieldPuns, OverloadedStrings, TemplateHaskell #-}
+{-# LANGUAGE DeriveGeneric, NamedFieldPuns, RecordWildCards, TemplateHaskell #-}
 module Server
   ( Server(..)
   , fetchPreferred
@@ -10,9 +10,6 @@ import Control.Lens
 import Data.Aeson
 import Data.Aeson.Lens
 import Data.Aeson.TH
-import Data.Maybe (catMaybes, isJust)
-import GHC.Generics
-import Data.Set (Set)
 import Data.Text as Text
 import qualified Network.HTTP.Simple as HTTP
 

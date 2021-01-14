@@ -2,9 +2,10 @@ name: MullvadConfigs
 version: 0.1.0.0
 github: "sandydoo/MullvadConfigs"
 license: BSD3
+license-file: LICENSE
 author: "Sander Melnikov"
-maintainer: "hey@sandydoo.me"
-copyright: "© 2020-present Sander Melnikov"
+maintainer: "Sander Melnikov <hey@sandydoo.me>"
+copyright: "© 2020 Sander Melnikov"
 
 extra-source-files:
 - README.md

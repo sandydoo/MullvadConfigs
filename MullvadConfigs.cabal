@@ -4,7 +4,7 @@ cabal-version: 2.0
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 72998e1a8496295fad529b74368b5158ebc263a99d889afaca3157807638ab34
+-- hash: 9eb77bb91317814425018ab54e0483c9ef14bea8be3e94ab0f0c46c7a9da7be7
 
 name:           MullvadConfigs
 version:        0.1.0.0
@@ -12,8 +12,8 @@ description:    Please see the README on GitHub at <https://github.com/sandydoo/
 homepage:       https://github.com/sandydoo/MullvadConfigs#readme
 bug-reports:    https://github.com/sandydoo/MullvadConfigs/issues
 author:         Sander Melnikov
-maintainer:     hey@sandydoo.me
-copyright:      © 2020-present Sander Melnikov
+maintainer:     Sander Melnikov <hey@sandydoo.me>
+copyright:      © 2020 Sander Melnikov
 license:        BSD3
 license-file:   LICENSE
 build-type:     Simple

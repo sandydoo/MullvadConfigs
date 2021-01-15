@@ -1,3 +1,4 @@
+{-# OPTIONS_GHC -fno-warn-orphans #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module Data.Network
   ( PortNumber
@@ -20,6 +21,7 @@ instance FromJSON PortNumber where
     do  word16 <- parseJSON w
         return (PortNumber word16)
 
+
 instance ToJSON PortNumber where
   toJSON (PortNumber port) = toJSON port
 
@@ -31,28 +33,42 @@ instance ToJSON PortNumber where
 instance FromJSON IPRange where
   parseJSON (String w) = parseFromText "Couln't parse IPRange" w
 
+  parseJSON _          = mzero
+
+
 instance ToJSON IPRange where
   toJSON = toJSONString
+
 
 instance ToText IPRange where
   toText = pack . show
 
 
+
 instance FromJSON IPv4 where
   parseJSON (String w) = parseFromText "Couln't parse IPv4" w
 
+  parseJSON _          = mzero
+
+
 instance ToJSON IPv4 where
   toJSON = toJSONString
+
 
 instance ToText IPv4 where
   toText = pack . show
 
 
+
 instance FromJSON IPv6 where
   parseJSON (String w) = parseFromText "Couln't parse IPv6" w
 
+  parseJSON _          = mzero
+
+
 instance ToJSON IPv6 where
   toJSON = toJSONString
+
 
 instance ToText IPv6 where
   toText = pack . show

@@ -8,7 +8,6 @@ module Config
 
 import qualified Data.ByteString as BS
 import qualified Data.Set as Set
-import           Data.Set (Set)
 import Data.Text as Text hiding (map)
 import System.FilePath ((</>), (<.>))
 

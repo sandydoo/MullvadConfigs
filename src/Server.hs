@@ -46,20 +46,20 @@ fetchPreferred preferredCountryCodes =
 
 data Server =
   Server
-    { hostname     :: Text
-    , countryCode  :: Text
-    , countryName  :: Text
-    , cityCode     :: Text
-    , cityName     :: Text
-    , active       :: Bool
-    , owned        :: Bool
-    , provider     :: Text
-    , ipv4AddrIn   :: IPv4
-    , ipv6AddrIn   :: IPv6
-    , serverType   :: Text
-    , publicKey    :: Text
-    , multihopPort :: PortNumber
-    , socksName    :: Text
+    { sHostname     :: Text
+    , sCountryCode  :: Text
+    , sCountryName  :: Text
+    , sCityCode     :: Text
+    , sCityName     :: Text
+    , sActive       :: Bool
+    , sOwned        :: Bool
+    , sProvider     :: Text
+    , sIpv4AddrIn   :: IPv4
+    , sIpv6AddrIn   :: IPv6
+    , sServerType   :: Text
+    , sPublicKey    :: Text
+    , sMultihopPort :: PortNumber
+    , sSocksName    :: Text
     } deriving (Generic, Show)
 
 
@@ -90,13 +90,13 @@ instance FromJSON Server where
 toPrettyName :: Server -> Text
 toPrettyName Server{..} =
   let
-    lowerCityName = Text.toLower cityName
+    lowerCityName = Text.toLower sCityName
 
-    serverCode = Text.takeWhile (/= '-') hostname
+    serverCode = Text.takeWhile (/= '-') sHostname
 
-    maybeCountryEmoji = CountryFlag.fromCountryCode countryCode
+    maybeCountryEmoji = CountryFlag.fromCountryCode sCountryCode
 
-    maybePreferredServer = if owned then Just "🌟" else Nothing
+    maybePreferredServer = if sOwned then Just "🌟" else Nothing
 
     nameList =
       [ maybeCountryEmoji, Just lowerCityName, Just serverCode, maybePreferredServer ]

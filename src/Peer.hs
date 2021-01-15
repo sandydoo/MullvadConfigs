@@ -15,12 +15,12 @@ import Data.Network
 
 data Peer =
   Peer
-    { name       :: Text
-    , publicKey  :: Text
-    , privateKey :: Text
-    , ipv4Addr   :: IPRange
-    , ipv6Addr   :: IPRange
-    , ports      :: [PortNumber]
+    { pName       :: Text
+    , pPublicKey  :: Text
+    , pPrivateKey :: Text
+    , pIpv4Addr   :: IPRange
+    , pIpv6Addr   :: IPRange
+    , pPorts      :: [PortNumber]
     } deriving (Generic, Show)
 
 
@@ -30,12 +30,12 @@ $(deriveToJSON defaultOptions ''Peer)
 instance FromJSON Peer where
   parseJSON =
     withObject "Peer" $ \o ->
-      do  name       <- o .: "name"
-          publicKey  <- o .: "public_key"
-          privateKey <- o .: "private_key"
-          ipv4Addr   <- o .: "ipv4_address"
-          ipv6Addr   <- o .: "ipv6_address"
-          ports      <- o .: "ports"
+      do  pName       <- o .: "name"
+          pPublicKey  <- o .: "public_key"
+          pPrivateKey <- o .: "private_key"
+          pIpv4Addr   <- o .: "ipv4_address"
+          pIpv6Addr   <- o .: "ipv6_address"
+          pPorts      <- o .: "ports"
 
           return Peer{..}
 

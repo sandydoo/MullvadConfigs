@@ -43,7 +43,7 @@ mullvadIPRange = "10.64.0.0/10"
 
 
 create :: Peer -> Server -> (Text, Config)
-create Peer{ privateKey, ipv4Addr, ipv6Addr } server@Server{ publicKey, ipv4AddrIn } =
+create Peer{..} server@Server{..} =
   let
     allowedIPs = Set.insert mullvadIPRange publicIPRanges
 
@@ -55,14 +55,14 @@ create Peer{ privateKey, ipv4Addr, ipv6Addr } server@Server{ publicKey, ipv4Addr
     config =
       Text.unlines $
         [ "[Interface]"
-        , "PrivateKey = " <> privateKey
-        , "Address = " <> toText ipv4Addr <> "," <> toText ipv6Addr
+        , "PrivateKey = " <> pPrivateKey
+        , "Address = " <> toText pIpv4Addr <> "," <> toText pIpv6Addr
         , "DNS = 193.138.218.74"
         , ""
         , "[Peer]"
-        , "PublicKey = " <> publicKey
+        , "PublicKey = " <> sPublicKey
         , "AllowedIPs = " <> serializeIPs allowedIPs
-        , "Endpoint = " <> toText ipv4AddrIn <> ":51820"
+        , "Endpoint = " <> toText sIpv4AddrIn <> ":51820"
         ]
   in
   (configName, Config config)

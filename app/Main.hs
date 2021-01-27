@@ -1,6 +1,3 @@
-module Main where
-
-
 import Codec.Archive.Zip as Zip
 import qualified Data.Set as Set
 import Data.Text as Text

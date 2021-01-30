@@ -1,4 +1,4 @@
-{-# LANGUAGE DeriveGeneric, TemplateHaskell #-}
+{-# LANGUAGE DeriveGeneric, StrictData, TemplateHaskell #-}
 module Peer
   ( Peer(..)
   , fromFile

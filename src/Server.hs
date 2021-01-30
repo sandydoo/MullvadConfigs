@@ -37,7 +37,7 @@ filterRawServerList preferredCountryCodes rawServerList =
 
 fetchPreferred :: Set Text -> IO [Server]
 fetchPreferred preferredCountryCodes =
-  do  request <- HTTP.parseRequest "https://api.mullvad.net/www/relays/all/"
+  do  request  <- HTTP.parseRequest "https://api.mullvad.net/www/relays/all/"
       response <- HTTP.getResponseBody <$> HTTP.httpBS request
 
       return $ filterRawServerList preferredCountryCodes response
@@ -94,12 +94,19 @@ toPrettyName Server{..} =
 
     serverCode = Text.takeWhile (/= '-') sHostname
 
-    maybeCountryEmoji = CountryFlag.fromCountryCode sCountryCode
+    maybeCountryFlag = CountryFlag.fromCountryCode sCountryCode
 
-    maybePreferredServer = if sOwned then Just "🌟" else Nothing
+    maybePreferredServer =
+      if sOwned
+      then Just "🌟"
+      else Nothing
 
     nameList =
-      [ maybeCountryEmoji, Just lowerCityName, Just serverCode, maybePreferredServer ]
+      [ maybeCountryFlag
+      , Just lowerCityName
+      , Just serverCode
+      , maybePreferredServer
+      ]
 
   in
     Text.intercalate "-" . catMaybes $ nameList

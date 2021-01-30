@@ -55,14 +55,14 @@ create Peer{..} server@Server{..} =
     config =
       Text.unlines $
         [ "[Interface]"
-        , "PrivateKey = " <> pPrivateKey
-        , "Address = " <> toText pIpv4Addr <> "," <> toText pIpv6Addr
+        , "PrivateKey = " <> peerPrivateKey
+        , "Address = " <> toText peerIpv4Addr <> "," <> toText peerIpv6Addr
         , "DNS = 193.138.218.74"
         , ""
         , "[Peer]"
-        , "PublicKey = " <> sPublicKey
+        , "PublicKey = " <> serverPublicKey
         , "AllowedIPs = " <> serializeIPs allowedIPs
-        , "Endpoint = " <> toText sIpv4AddrIn <> ":51820"
+        , "Endpoint = " <> toText serverIpv4AddrIn <> ":51820"
         ]
   in
   (configName, Config config)

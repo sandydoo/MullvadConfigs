@@ -21,17 +21,18 @@ import Data.CountryFlag as CountryFlag
 filterRawServerList :: AsValue s => Set Text -> s -> [Server]
 filterRawServerList preferredCountryCodes rawServerList =
   let
-    isPreferredCountry :: Text -> Maybe ()
-    isPreferredCountry code = preferredCountryCodes ^? ix code
+    byPreferredCountryCode :: AsValue s => s -> Bool
+    byPreferredCountryCode server =
+      isJust $
+        do code <- server ^? key "country_code" . _String
+           preferredCountryCodes ^? ix code
 
-    countryCode :: AsValue s => s -> Maybe Text
-    countryCode server = server ^? key "country_code" . _String
   in
   rawServerList
     ^.. values
     . filteredBy (key "type"   . _String . only "wireguard")
     . filteredBy (key "active" . _Bool   . only True)
-    . filtered (\server -> isJust $ isPreferredCountry =<< countryCode server)
+    . filtered byPreferredCountryCode
     . _JSON
 
 

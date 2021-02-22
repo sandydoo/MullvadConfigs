@@ -18,7 +18,7 @@ import Data.CountryFlag as CountryFlag
 
 
 
-filterRawServerList :: AsValue s => Set Text -> s -> [Server]
+filterRawServerList :: AsValue s => Set Text -> s -> [ Server ]
 filterRawServerList preferredCountryCodes rawServerList =
   let
     byPreferredCountryCode :: AsValue s => s -> Bool
@@ -30,18 +30,19 @@ filterRawServerList preferredCountryCodes rawServerList =
   in
   rawServerList
     ^.. values
-    . filteredBy (key "type"   . _String . only "wireguard")
-    . filteredBy (key "active" . _Bool   . only True)
+    . filteredBy ( key "type"   . _String . only "wireguard" )
+    . filteredBy ( key "active" . _Bool   . only True )
     . filtered byPreferredCountryCode
     . _JSON
 
 
-fetchPreferred :: Set Text -> IO [Server]
+fetchPreferred :: Set Text -> IO [ Server ]
 fetchPreferred preferredCountryCodes =
   do  request  <- HTTP.parseRequest "https://api.mullvad.net/www/relays/all/"
       response <- HTTP.getResponseBody <$> HTTP.httpBS request
 
-      return $ filterRawServerList preferredCountryCodes response
+      return $
+        filterRawServerList preferredCountryCodes response
 
 
 
@@ -61,10 +62,10 @@ data Server =
     , serverPublicKey    :: Text
     , serverMultihopPort :: PortNumber
     , serverSocksName    :: Text
-    } deriving (Generic, Show)
+    } deriving ( Generic, Show )
 
 
-$(deriveToJSON defaultOptions ''Server)
+$( deriveToJSON defaultOptions ''Server )
 
 
 instance FromJSON Server where
@@ -89,11 +90,11 @@ instance FromJSON Server where
 
 
 toPrettyName :: Server -> Text
-toPrettyName Server{..} =
+toPrettyName Server {..} =
   let
     lowerCityName = Text.toLower serverCityName
 
-    serverCode = Text.takeWhile (/= '-') serverHostname
+    serverCode = Text.takeWhile ( /= '-' ) serverHostname
 
     maybeCountryFlag = CountryFlag.fromCountryCode serverCountryCode
 
@@ -110,4 +111,4 @@ toPrettyName Server{..} =
       ]
 
   in
-    Text.intercalate "-" . catMaybes $ nameList
+    Text.intercalate "-" ( catMaybes nameList )

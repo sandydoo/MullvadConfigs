@@ -8,8 +8,8 @@ module Config
 
 import qualified Data.ByteString as BS
 import qualified Data.Set as Set
-import Data.Text as Text hiding (map)
-import System.FilePath ((</>), (<.>))
+import Data.Text as Text hiding ( map )
+import System.FilePath ( (</>), (<.>) )
 
 import Data.Network
 import Peer
@@ -20,7 +20,7 @@ import Server
 -- Generate config
 
 
-newtype Config = Config Text deriving (Show)
+newtype Config = Config Text deriving ( Show )
 
 
 -- Explicitly send traffic for public IP ranges through the tunnel, excluding private / LAN ranges.
@@ -42,8 +42,8 @@ mullvadIPRange = "10.64.0.0/10"
 
 
 
-create :: Peer -> Server -> (Text, Config)
-create Peer{..} server@Server{..} =
+create :: Peer -> Server -> ( Text, Config )
+create Peer {..} server@Server {..} =
   let
     allowedIPs = Set.insert mullvadIPRange publicIPRanges
 
@@ -65,12 +65,12 @@ create Peer{..} server@Server{..} =
         , "Endpoint = " <> toText serverIpv4AddrIn <> ":51820"
         ]
   in
-  (configName, Config config)
+  ( configName, Config config )
 
 
-writeToFile :: FilePath -> (Text, Config) -> IO ()
-writeToFile directory (configName, Config config) =
+writeToFile :: FilePath -> ( Text, Config ) -> IO ()
+writeToFile directory ( configName, Config config ) =
   let
     filePath = directory </> unpack configName <.> "conf"
   in
-    BS.writeFile filePath (encodeUtf8 config)
+    BS.writeFile filePath ( encodeUtf8 config )

@@ -13,17 +13,17 @@ import Data.Text
 
 newtype PortNumber =
   PortNumber Word16
-  deriving (Eq, Ord, Num, Enum, Bounded, Real, Integral, Show)
+  deriving ( Eq, Ord, Num, Enum, Bounded, Real, Integral, Show )
 
 
 instance FromJSON PortNumber where
   parseJSON w =
     do  word16 <- parseJSON w
-        return (PortNumber word16)
+        return $ PortNumber word16
 
 
 instance ToJSON PortNumber where
-  toJSON (PortNumber port) = toJSON port
+  toJSON ( PortNumber port ) = toJSON port
 
 
 
@@ -31,9 +31,9 @@ instance ToJSON PortNumber where
 
 
 instance FromJSON IPRange where
-  parseJSON (String w) = parseFromText "Couln't parse IPRange" w
+  parseJSON ( String w ) = parseFromText "Couln't parse IPRange" w
 
-  parseJSON _          = mzero
+  parseJSON _            = mzero
 
 
 instance ToJSON IPRange where
@@ -46,9 +46,9 @@ instance ToText IPRange where
 
 
 instance FromJSON IPv4 where
-  parseJSON (String w) = parseFromText "Couln't parse IPv4" w
+  parseJSON ( String w ) = parseFromText "Couln't parse IPv4" w
 
-  parseJSON _          = mzero
+  parseJSON _            = mzero
 
 
 instance ToJSON IPv4 where
@@ -61,9 +61,9 @@ instance ToText IPv4 where
 
 
 instance FromJSON IPv6 where
-  parseJSON (String w) = parseFromText "Couln't parse IPv6" w
+  parseJSON ( String w ) = parseFromText "Couln't parse IPv6" w
 
-  parseJSON _          = mzero
+  parseJSON _            = mzero
 
 
 instance ToJSON IPv6 where
@@ -78,9 +78,9 @@ instance ToText IPv6 where
 -- Helpers
 
 
-parseFromText :: (Read a, MonadFail m) => String -> Text -> m a
+parseFromText :: ( Read a, MonadFail m ) => String -> Text -> m a
 parseFromText err w =
-  case readMaybe (unpack w) of
+  case readMaybe ( unpack w ) of
     Nothing ->
       fail err
 

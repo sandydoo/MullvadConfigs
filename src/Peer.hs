@@ -20,11 +20,8 @@ data Peer =
     , peerPrivateKey :: Text
     , peerIpv4Addr   :: IPRange
     , peerIpv6Addr   :: IPRange
-    , peerPorts      :: [PortNumber]
-    } deriving (Generic, Show)
-
-
-$(deriveToJSON defaultOptions ''Peer)
+    , peerPorts      :: [ PortNumber ]
+    } deriving ( Generic, Show )
 
 
 instance FromJSON Peer where
@@ -37,15 +34,17 @@ instance FromJSON Peer where
           peerIpv6Addr   <- o .: "ipv6_address"
           peerPorts      <- o .: "ports"
 
-          return Peer{..}
+          return Peer {..}
 
 
+$( deriveToJSON defaultOptions ''Peer )
 
-fromFile :: String -> IO [Peer]
+
+fromFile :: String -> IO [ Peer ]
 fromFile filename =
   BS.readFile filename >>=
     \bytestring ->
-      case (decodeStrict bytestring) of
+      case decodeStrict bytestring of
         Just peers ->
           return peers
 

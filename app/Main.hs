@@ -2,7 +2,7 @@ import Codec.Archive.Zip as Zip
 import qualified Data.Set as Set
 import Data.Text as Text
 import qualified System.Directory as FS
-import System.FilePath ((</>), (<.>))
+import System.FilePath ( (</>), (<.>) )
 
 import qualified Config
 import qualified Peer
@@ -27,7 +27,7 @@ main =
       currentPath <- FS.getCurrentDirectory
 
       forM_ peers $ \peer ->
-        do  let clientName = unpack (Peer.peerName peer)
+        do  let clientName = unpack ( Peer.peerName peer )
             let configPath = currentPath </> "configs" </> clientName
 
             putStrLn $ "Creating configs for " <> clientName <> "..."
@@ -38,7 +38,7 @@ main =
                 Config.create peer server
 
             putStrLn $ "Creating zip archive for " <> clientName <> "..."
-            Zip.createArchive (configPath <.> "zip") $
+            Zip.createArchive ( configPath <.> "zip" ) $
               Zip.packDirRecur Zip.Deflate Zip.mkEntrySelector configPath
 
       putStrLn "Configurations created."

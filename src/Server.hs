@@ -48,20 +48,21 @@ fetchPreferred preferredCountryCodes =
 
 data Server =
   Server
-    { serverHostname     :: Text
-    , serverCountryCode  :: Text
-    , serverCountryName  :: Text
-    , serverCityCode     :: Text
-    , serverCityName     :: Text
-    , serverActive       :: Bool
-    , serverOwned        :: Bool
-    , serverProvider     :: Text
-    , serverIpv4AddrIn   :: IPv4
-    , serverIpv6AddrIn   :: IPv6
-    , serverServerType   :: Text
-    , serverPublicKey    :: Text
-    , serverMultihopPort :: PortNumber
-    , serverSocksName    :: Text
+    { serverHostname       :: Text
+    , serverCountryCode    :: Text
+    , serverCountryName    :: Text
+    , serverCityCode       :: Text
+    , serverCityName       :: Text
+    , serverActive         :: Bool
+    , serverOwned          :: Bool
+    , serverProvider       :: Text
+    , serverIpv4AddrIn     :: IPv4
+    , serverIpv6AddrIn     :: IPv6
+    , serverType           :: Text
+    , serverPublicKey      :: Text
+    , serverMultihopPort   :: PortNumber
+    , serverSocksName      :: Text
+    , serverStatusMessages :: [ Text ]
     } deriving ( Generic, Show )
 
 
@@ -86,6 +87,7 @@ instance FromJSON Server where
         <*> o .: "pubkey"
         <*> o .: "multihop_port"
         <*> o .: "socks_name"
+        <*> o .: "status_messages"
 
 
 

@@ -21,17 +21,24 @@ source-repository head
   type: git
   location: https://github.com/sandydoo/MullvadConfigs
 
-library
-  hs-source-dirs:
-      src
+flag dev
+  description:
+    Turn on development settings. Build with all errors and without any
+    optimizations.
+  default: False
+  manual: True
+
+common build-options
+  default-language: Haskell2010
   default-extensions: NamedFieldPuns OverloadedStrings RecordWildCards
-  ghc-options: -Wall
-  exposed-modules:
-      Config
-      Data.CountryFlag
-      Data.Network
-      Peer
-      Server
+
+  if flag(dev)
+    ghc-options:
+      -O0 -Wall
+  else
+    ghc-options: -O2 -Wall
+
+common dependencies
   build-depends:
       aeson
     , base >=4.7 && <5
@@ -49,30 +56,24 @@ library
   mixins:
       base hiding (Prelude)
     , relude (Relude as Prelude)
-  default-language: Haskell2010
 
-executable create-mullvad-configs
-  main-is: Main.hs
+library
+  import: build-options, dependencies
   hs-source-dirs:
-    app
-  default-extensions: NamedFieldPuns OverloadedStrings RecordWildCards
-  ghc-options: -Wall -threaded -rtsopts -with-rtsopts=-N
-  build-depends:
-      MullvadConfigs
-    , aeson
-    , base >=4.7 && <5
-    , bytestring
-    , containers
-    , directory
-    , filepath
-    , http-conduit
-    , iproute
-    , lens
-    , lens-aeson
-    , relude
-    , text
-    , zip
+      src
+  exposed-modules:
+      Config
+      Data.CountryFlag
+      Data.Network
+      Peer
+      Server
   mixins:
       base hiding (Prelude)
     , relude (Relude as Prelude)
-  default-language: Haskell2010
+
+executable create-mullvad-configs
+  import: build-options, dependencies
+  main-is: Main.hs
+  hs-source-dirs:
+    app
+  build-depends: MullvadConfigs

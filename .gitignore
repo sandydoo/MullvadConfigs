@@ -4,3 +4,7 @@ configs
 # Stack
 .stack-work/
 *~
+
+# Cabal
+dist-newstyle/
+

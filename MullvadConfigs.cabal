@@ -10,7 +10,7 @@ author:         Sander Melnikov
 maintainer:     Sander Melnikov <hey@sandydoo.me>
 copyright:      © 2020 Sander Melnikov
 
-license:        BSD3
+license:        BSD-3-Clause
 license-file:   LICENSE
 
 build-type:     Simple

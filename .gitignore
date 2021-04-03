@@ -8,3 +8,6 @@ configs
 # Cabal
 dist-newstyle/
 
+# Nix
+result
+

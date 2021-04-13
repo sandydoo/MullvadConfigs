@@ -56,6 +56,7 @@ common dependencies
   mixins:
       base hiding (Prelude)
     , relude (Relude as Prelude)
+    , relude
 
 library
   import: build-options, dependencies
@@ -67,9 +68,6 @@ library
       Data.Network
       Peer
       Server
-  mixins:
-      base hiding (Prelude)
-    , relude (Relude as Prelude)
 
 executable create-mullvad-configs
   import: build-options, dependencies

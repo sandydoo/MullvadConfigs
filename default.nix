@@ -1,6 +1,6 @@
 { mkDerivation, aeson, base, bytestring, containers, directory
 , filepath, http-conduit, iproute, lens, lens-aeson, lib, relude
-, text, zip
+, text, text-builder, zip
 }:
 mkDerivation {
   pname = "MullvadConfigs";
@@ -10,11 +10,11 @@ mkDerivation {
   isExecutable = true;
   libraryHaskellDepends = [
     aeson base bytestring containers directory filepath http-conduit
-    iproute lens lens-aeson relude text zip
+    iproute lens lens-aeson relude text text-builder zip
   ];
   executableHaskellDepends = [
     aeson base bytestring containers directory filepath http-conduit
-    iproute lens lens-aeson relude text zip
+    iproute lens lens-aeson relude text text-builder zip
   ];
   homepage = "https://github.com/sandydoo/MullvadConfigs#readme";
   license = lib.licenses.bsd3;

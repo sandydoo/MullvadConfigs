@@ -98,7 +98,7 @@ toPrettyName Server {..} =
 
     serverCode = Text.takeWhile ( /= '-' ) serverHostname
 
-    maybeCountryFlag = CountryFlag.fromCountryCode serverCountryCode
+    countryFlag = CountryFlag.fromCountryCode serverCountryCode
 
     maybePreferredServer =
       if serverOwned
@@ -106,7 +106,7 @@ toPrettyName Server {..} =
       else Nothing
 
     nameList =
-      [ maybeCountryFlag
+      [ Just countryFlag
       , Just lowerCityName
       , Just serverCode
       , maybePreferredServer

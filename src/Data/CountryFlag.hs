@@ -3,23 +3,16 @@ module Data.CountryFlag
   ) where
 
 
-import qualified Data.Map as Map
+import qualified Text.Builder as TB
+import qualified Data.Text as Text
 
 
 
-type Flag = Text
-
-
-fromCountryCode :: Text -> Maybe Flag
-fromCountryCode code = Map.lookup code countryFlags
-
-
-countryFlags :: Map Text Flag
-countryFlags =
-  Map.fromList
-    [ ( "ch", "🇨🇭" )
-    , ( "de", "🇩🇪" )
-    , ( "gb", "🇬🇧" )
-    , ( "nl", "🇳🇱" )
-    , ( "se", "🇸🇪" )
-    ]
+fromCountryCode :: Text -> Text
+fromCountryCode code =
+  let
+    toRegionalCode :: Char -> TB.Builder
+    toRegionalCode ch = TB.unicodeCodePoint $ ord ch - ord 'a' + ord '🇦'
+  in
+  TB.run $
+    Text.foldl' (\b ch -> b <> toRegionalCode ch) mempty code

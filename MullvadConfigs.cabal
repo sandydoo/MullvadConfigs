@@ -52,6 +52,7 @@ common dependencies
     , lens-aeson
     , relude
     , text
+    , text-builder
     , zip
   mixins:
       base hiding (Prelude)

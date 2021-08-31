@@ -63,6 +63,12 @@ nix-build release.nix
 ./result/bin/create-mullvad-configs
 ```
 
+Or using Nix flakes:
+
+```sh
+nix build --system x86_64-darwin
+```
+
 #### Build with Stack
 
 ```sh

@@ -48,21 +48,22 @@ fetchPreferred preferredCountryCodes =
 
 data Server =
   Server
-    { serverHostname       :: Text
-    , serverCountryCode    :: Text
-    , serverCountryName    :: Text
-    , serverCityCode       :: Text
-    , serverCityName       :: Text
-    , serverActive         :: Bool
-    , serverOwned          :: Bool
-    , serverProvider       :: Text
-    , serverIpv4AddrIn     :: IPv4
-    , serverIpv6AddrIn     :: IPv6
-    , serverType           :: Text
-    , serverPublicKey      :: Text
-    , serverMultihopPort   :: PortNumber
-    , serverSocksName      :: Text
-    , serverStatusMessages :: [ Text ]
+    { serverHostname         :: Text
+    , serverCountryCode      :: Text
+    , serverCountryName      :: Text
+    , serverCityCode         :: Text
+    , serverCityName         :: Text
+    , serverActive           :: Bool
+    , serverOwned            :: Bool
+    , serverProvider         :: Text
+    , serverIpv4AddrIn       :: IPv4
+    , serverIpv6AddrIn       :: IPv6
+    , serverNetworkPortSpeed :: Int
+    , serverType             :: Text
+    , serverPublicKey        :: Text
+    , serverMultihopPort     :: PortNumber
+    , serverSocksName        :: Text
+    , serverStatusMessages   :: [ Text ]
     } deriving ( Generic, Show )
 
 
@@ -83,6 +84,7 @@ instance FromJSON Server where
         <*> o .: "provider"
         <*> o .: "ipv4_addr_in"
         <*> o .: "ipv6_addr_in"
+        <*> o .: "network_port_speed"
         <*> o .: "type"
         <*> o .: "pubkey"
         <*> o .: "multihop_port"
@@ -93,24 +95,17 @@ instance FromJSON Server where
 
 toPrettyName :: Server -> Text
 toPrettyName Server {..} =
-  let
-    lowerCityName = Text.toLower serverCityName
-
-    serverCode = Text.takeWhile ( /= '-' ) serverHostname
-
-    countryFlag = CountryFlag.fromCountryCode serverCountryCode
-
-    maybePreferredServer =
-      if serverOwned
+  Text.intercalate "-" . catMaybes $
+    [ Just $
+        CountryFlag.fromCountryCode serverCountryCode
+    , Just $
+        Text.toLower serverCityName
+    , Just $
+        Text.takeWhile ( /= '-' ) serverHostname
+    , if serverNetworkPortSpeed >= 10
+      then Just "⚡"
+      else Nothing
+    , if serverOwned
       then Just "🌟"
       else Nothing
-
-    nameList =
-      [ Just countryFlag
-      , Just lowerCityName
-      , Just serverCode
-      , maybePreferredServer
-      ]
-
-  in
-    Text.intercalate "-" ( catMaybes nameList )
+    ]

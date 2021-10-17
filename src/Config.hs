@@ -23,10 +23,10 @@ import Server
 newtype Config = Config Text deriving ( Show )
 
 
--- Explicitly send traffic for public IP ranges through the tunnel, excluding private / LAN ranges.
+-- Explicitly send traffic for public IP blocks through the tunnel, excluding private / LAN ranges.
 -- To instead send everything through the tunnel: 0.0.0.0/0,::0/0
-publicIPRanges :: Set IPRange
-publicIPRanges =
+publicIpBlocks :: Set IpBlock
+publicIpBlocks =
   Set.fromList
     [ "1.0.0.0/8", "2.0.0.0/8", "3.0.0.0/8", "4.0.0.0/6", "8.0.0.0/7", "11.0.0.0/8", "12.0.0.0/6", "16.0.0.0/4"
     , "32.0.0.0/3" , "64.0.0.0/2", "128.0.0.0/3", "160.0.0.0/5", "168.0.0.0/6", "172.0.0.0/12", "172.32.0.0/11"
@@ -37,18 +37,18 @@ publicIPRanges =
     ]
 
 
-mullvadIPRange :: IPRange
-mullvadIPRange = "10.64.0.0/10"
+mullvadIpBlock :: IpBlock
+mullvadIpBlock = "10.64.0.0/10"
 
 
 
 create :: Peer -> Server -> ( Text, Config )
 create Peer {..} server@Server {..} =
   let
-    allowedIPs = Set.insert mullvadIPRange publicIPRanges
+    allowedIps = Set.insert mullvadIpBlock publicIpBlocks
 
-    serializeIPs :: Set IPRange -> Text
-    serializeIPs = Text.intercalate ", " . map toText . Set.toList
+    serializeIps :: Set IpBlock -> Text
+    serializeIps = Text.intercalate ", " . map toText . Set.toList
 
     configName = Server.toPrettyName server
 
@@ -61,7 +61,7 @@ create Peer {..} server@Server {..} =
         , ""
         , "[Peer]"
         , "PublicKey = " <> serverPublicKey
-        , "AllowedIPs = " <> serializeIPs allowedIPs
+        , "AllowedIPs = " <> serializeIps allowedIps
         , "Endpoint = " <> toText serverIpv4AddrIn <> ":51820"
         ]
   in

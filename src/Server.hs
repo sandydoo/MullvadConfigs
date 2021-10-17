@@ -56,12 +56,12 @@ data Server =
     , serverActive           :: Bool
     , serverOwned            :: Bool
     , serverProvider         :: Text
-    , serverIpv4AddrIn       :: IPv4
-    , serverIpv6AddrIn       :: IPv6
+    , serverIpv4AddrIn       :: Ipv4
+    , serverIpv6AddrIn       :: Ipv6
     , serverNetworkPortSpeed :: Int
     , serverType             :: Text
     , serverPublicKey        :: Text
-    , serverMultihopPort     :: PortNumber
+    , serverMultihopPort     :: Port
     , serverSocksName        :: Text
     , serverStatusMessages   :: [ Text ]
     } deriving ( Generic, Show )

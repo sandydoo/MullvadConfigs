@@ -47,7 +47,6 @@ common dependencies
     , directory
     , filepath
     , http-conduit
-    , iproute
     , lens
     , lens-aeson
     , relude
@@ -67,6 +66,7 @@ library
       Config
       Data.CountryFlag
       Data.Network
+      Data.Network.Port
       Peer
       Server
 

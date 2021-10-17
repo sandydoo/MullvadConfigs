@@ -18,9 +18,9 @@ data Peer =
     { peerName       :: Text
     , peerPublicKey  :: Text
     , peerPrivateKey :: Text
-    , peerIpv4Addr   :: IPRange
-    , peerIpv6Addr   :: IPRange
-    , peerPorts      :: [ PortNumber ]
+    , peerIpv4Addr   :: IpBlock
+    , peerIpv6Addr   :: IpBlock
+    , peerPorts      :: [ Port ]
     } deriving ( Generic, Show )
 
 

@@ -30,7 +30,12 @@ flag dev
 
 common build-options
   default-language: Haskell2010
-  default-extensions: NamedFieldPuns OverloadedStrings RecordWildCards
+  default-extensions:
+    DerivingStrategies
+    GeneralizedNewtypeDeriving
+    NamedFieldPuns
+    OverloadedStrings
+    RecordWildCards
 
   if flag(dev)
     ghc-options:

@@ -15,13 +15,15 @@
         hlib = pkgs.haskell.lib;
         hpkgs = pkgs.haskellPackages;
 
-        project = { returnShellEnv }: hpkgs.developPackage {
+        project = { devMode, returnShellEnv }: hpkgs.developPackage {
           name = "MullvadConfigs";
           root = ./.;
           withHoogle = false;
 
           # Allow a shell environment to be requested
           inherit returnShellEnv;
+
+          cabal2nixOptions = if devMode then "--flag=dev" else "";
 
           modifier = drv: hlib.addBuildTools drv (with hpkgs;
             [
@@ -35,8 +37,8 @@
         };
       in
       {
-        defaultPackage = project { returnShellEnv = false; };
-        devShell = project { returnShellEnv = true; };
+        defaultPackage = project { devMode = false; returnShellEnv = false; };
+        devShell = project { devMode = true; returnShellEnv = true; };
       }
     );
 }

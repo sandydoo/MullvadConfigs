@@ -31,6 +31,8 @@ flag dev
 common build-options
   default-language: Haskell2010
   default-extensions:
+    DeriveAnyClass
+    DeriveGeneric
     DerivingStrategies
     GeneralizedNewtypeDeriving
     NamedFieldPuns
@@ -54,6 +56,7 @@ common dependencies
     , http-conduit
     , lens
     , lens-aeson
+    , megaparsec
     , relude
     , text
     , text-builder
@@ -66,14 +69,17 @@ common dependencies
 library
   import: build-options, dependencies
   hs-source-dirs:
-      src
+    src
   exposed-modules:
-      Config
-      Data.CountryFlag
-      Data.Network
-      Data.Network.Port
-      Peer
-      Server
+    Config
+    Data.CountryFlag
+    Data.Network
+    Data.Network.Ip
+    Data.Network.Ipv4
+    Data.Network.Ipv6
+    Data.Network.Port
+    Peer
+    Server
 
 executable create-mullvad-configs
   import: build-options, dependencies

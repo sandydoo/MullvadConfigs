@@ -14,6 +14,8 @@ import Data.Text as Text
 import qualified Network.HTTP.Simple as HTTP
 
 import Data.Network
+import qualified Data.Network.Ipv4 as Ipv4
+import qualified Data.Network.Ipv6 as Ipv6
 import Data.CountryFlag as CountryFlag
 
 
@@ -56,8 +58,8 @@ data Server =
     , serverActive           :: Bool
     , serverOwned            :: Bool
     , serverProvider         :: Text
-    , serverIpv4AddrIn       :: Ipv4
-    , serverIpv6AddrIn       :: Ipv6
+    , serverIpv4AddrIn       :: Ipv4.IpAddress
+    , serverIpv6AddrIn       :: Ipv6.IpAddress
     , serverNetworkPortSpeed :: Int
     , serverType             :: Text
     , serverPublicKey        :: Text

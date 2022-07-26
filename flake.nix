@@ -1,7 +1,7 @@
 {
   description = "Generate Wireguard configurations for Mullvad";
 
-  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-21.05";
+  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-22.05";
   inputs.flake-utils.url = "github:numtide/flake-utils";
 
   outputs = { self, nixpkgs, flake-utils }:
@@ -37,8 +37,8 @@
         };
       in
       {
-        defaultPackage = project { devMode = false; returnShellEnv = false; };
-        devShell = project { devMode = true; returnShellEnv = true; };
+        packages.default = project { devMode = false; returnShellEnv = false; };
+        devShells.default = project { devMode = true; returnShellEnv = true; };
       }
     );
 }

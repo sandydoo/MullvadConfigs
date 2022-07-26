@@ -18,34 +18,6 @@ import Data.CountryFlag as CountryFlag
 
 
 
-filterRawServerList :: AsValue s => Set Text -> s -> [ Server ]
-filterRawServerList preferredCountryCodes rawServerList =
-  let
-    byPreferredCountryCode :: AsValue s => s -> Bool
-    byPreferredCountryCode server =
-      isJust $
-        do code <- server ^? key "country_code" . _String
-           preferredCountryCodes ^? ix code
-
-  in
-  rawServerList
-    ^.. values
-    . filteredBy ( key "type"   . _String . only "wireguard" )
-    . filteredBy ( key "active" . _Bool   . only True )
-    . filtered byPreferredCountryCode
-    . _JSON
-
-
-fetchPreferred :: Set Text -> IO [ Server ]
-fetchPreferred preferredCountryCodes =
-  do  request  <- HTTP.parseRequest "https://api.mullvad.net/www/relays/all/"
-      response <- HTTP.getResponseBody <$> HTTP.httpBS request
-
-      return $
-        filterRawServerList preferredCountryCodes response
-
-
-
 data Server =
   Server
     { serverHostname         :: Text
@@ -91,7 +63,29 @@ instance FromJSON Server where
         <*> o .: "socks_name"
         <*> o .: "status_messages"
 
+fetchPreferred :: Set Text -> IO [Server]
+fetchPreferred preferredCountryCodes =
+  do
+    request <- HTTP.parseRequest "https://api.mullvad.net/www/relays/all/"
+    response <- HTTP.getResponseBody <$> HTTP.httpBS request
 
+    return $
+      filterRawServerList preferredCountryCodes response
+
+filterRawServerList :: (AsValue s) => Set Text -> s -> [Server]
+filterRawServerList preferredCountryCodes rawServerList =
+  let byPreferredCountryCode :: AsValue s => s -> Bool
+      byPreferredCountryCode server =
+        isJust $
+          do
+            code <- server ^? key "country_code" . _String
+            preferredCountryCodes ^? ix code
+   in rawServerList
+        ^.. values
+          . filteredBy (key "type" . _String . only "wireguard")
+          . filteredBy (key "active" . _Bool . only True)
+          . filtered byPreferredCountryCode
+          . _JSON
 
 toPrettyName :: Server -> Text
 toPrettyName Server {..} =

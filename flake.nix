@@ -31,7 +31,7 @@
               cabal-install
               ghcid
               haskell-language-server
-              ormolu
+              stylish-haskell
               pkgs.nixpkgs-fmt
             ]);
         };

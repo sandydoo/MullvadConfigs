@@ -1,46 +1,44 @@
-{-# LANGUAGE DeriveGeneric, StrictData, TemplateHaskell #-}
-module Server
-  ( Server(..)
-  , fetchPreferred
-  , toPrettyName
-  ) where
+{-# LANGUAGE DeriveGeneric #-}
+{-# LANGUAGE StrictData #-}
+{-# LANGUAGE TemplateHaskell #-}
 
+module Server
+  ( Server (..),
+    fetchPreferred,
+    toPrettyName,
+  )
+where
 
 import Control.Lens
 import Data.Aeson
 import Data.Aeson.Lens
 import Data.Aeson.TH
+import Data.CountryFlag as CountryFlag
+import Data.Network
 import Data.Text as Text
 import qualified Network.HTTP.Simple as HTTP
 
-import Data.Network
-import Data.CountryFlag as CountryFlag
+data Server = Server
+  { serverHostname :: Text,
+    serverCountryCode :: Text,
+    serverCountryName :: Text,
+    serverCityCode :: Text,
+    serverCityName :: Text,
+    serverActive :: Bool,
+    serverOwned :: Bool,
+    serverProvider :: Text,
+    serverIpv4AddrIn :: Ipv4,
+    serverIpv6AddrIn :: Ipv6,
+    serverNetworkPortSpeed :: Int,
+    serverType :: Text,
+    serverPublicKey :: Text,
+    serverMultihopPort :: Port,
+    serverSocksName :: Text,
+    serverStatusMessages :: [Text]
+  }
+  deriving (Generic, Show)
 
-
-
-data Server =
-  Server
-    { serverHostname         :: Text
-    , serverCountryCode      :: Text
-    , serverCountryName      :: Text
-    , serverCityCode         :: Text
-    , serverCityName         :: Text
-    , serverActive           :: Bool
-    , serverOwned            :: Bool
-    , serverProvider         :: Text
-    , serverIpv4AddrIn       :: Ipv4
-    , serverIpv6AddrIn       :: Ipv6
-    , serverNetworkPortSpeed :: Int
-    , serverType             :: Text
-    , serverPublicKey        :: Text
-    , serverMultihopPort     :: Port
-    , serverSocksName        :: Text
-    , serverStatusMessages   :: [ Text ]
-    } deriving ( Generic, Show )
-
-
-$( deriveToJSON defaultOptions ''Server )
-
+$(deriveToJSON defaultOptions ''Server)
 
 instance FromJSON Server where
   parseJSON =
@@ -91,15 +89,15 @@ toPrettyName :: Server -> Text
 toPrettyName Server {..} =
   Text.intercalate "-" . catMaybes $
     [ Just $
-        CountryFlag.fromCountryCode serverCountryCode
-    , Just $
-        Text.toLower serverCityName
-    , Just $
-        Text.takeWhile ( /= '-' ) serverHostname
-    , if serverNetworkPortSpeed >= 10
-      then Just "⚡"
-      else Nothing
-    , if serverOwned
-      then Just "🌟"
-      else Nothing
+        CountryFlag.fromCountryCode serverCountryCode,
+      Just $
+        Text.toLower serverCityName,
+      Just $
+        serverHostname,
+      if serverNetworkPortSpeed >= 10
+        then Just "⚡"
+        else Nothing,
+      if serverOwned
+        then Just "🌟"
+        else Nothing
     ]

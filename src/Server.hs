@@ -13,10 +13,20 @@ import Control.Lens
 import Data.Aeson
 import Data.Aeson.Lens
 import Data.Aeson.TH
-import Data.CountryFlag as CountryFlag
+import qualified Data.CountryFlag as CountryFlag
 import Data.Network
-import Data.Text as Text
+import qualified Data.Text as Text
+import Data.Time.Clock (UTCTime)
 import qualified Network.HTTP.Simple as HTTP
+
+data StatusMessage = StatusMessage
+  { message :: Text,
+    timestamp :: UTCTime
+  }
+  deriving (Generic, Show)
+
+$(deriveToJSON defaultOptions ''StatusMessage)
+$(deriveFromJSON defaultOptions ''StatusMessage)
 
 data Server = Server
   { serverHostname :: Text,
@@ -36,7 +46,7 @@ data Server = Server
     serverSocksName :: Text,
     serverSocksPort :: Int,
     serverType :: Text,
-    serverStatusMessages :: [Text]
+    serverStatusMessages :: [StatusMessage]
   }
   deriving (Generic, Show)
 

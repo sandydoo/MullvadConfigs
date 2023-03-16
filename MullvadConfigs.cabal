@@ -57,6 +57,7 @@ common dependencies
     , relude
     , text
     , text-builder
+    , time
     , zip
   mixins:
       base hiding (Prelude)

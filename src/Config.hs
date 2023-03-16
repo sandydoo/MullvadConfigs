@@ -57,7 +57,7 @@ create Peer {..} server@Server {..} =
         [ "[Interface]"
         , "PrivateKey = " <> peerPrivateKey
         , "Address = " <> toText peerIpv4Addr <> "," <> toText peerIpv6Addr
-        , "DNS = 193.138.218.74"
+        , "DNS = 10.64.0.1"
         , ""
         , "[Peer]"
         , "PublicKey = " <> serverPublicKey

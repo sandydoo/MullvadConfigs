@@ -30,10 +30,12 @@ data Server = Server
     serverIpv4AddrIn :: Ipv4,
     serverIpv6AddrIn :: Ipv6,
     serverNetworkPortSpeed :: Int,
-    serverType :: Text,
+    serverSTBoot :: Bool,
     serverPublicKey :: Text,
     serverMultihopPort :: Port,
     serverSocksName :: Text,
+    serverSocksPort :: Int,
+    serverType :: Text,
     serverStatusMessages :: [Text]
   }
   deriving (Generic, Show)
@@ -44,22 +46,42 @@ instance FromJSON Server where
   parseJSON =
     withObject "Server" $ \o ->
       Server
-        <$> o .: "hostname"
-        <*> o .: "country_code"
-        <*> o .: "country_name"
-        <*> o .: "city_code"
-        <*> o .: "city_name"
-        <*> o .: "active"
-        <*> o .: "owned"
-        <*> o .: "provider"
-        <*> o .: "ipv4_addr_in"
-        <*> o .: "ipv6_addr_in"
-        <*> o .: "network_port_speed"
-        <*> o .: "type"
-        <*> o .: "pubkey"
-        <*> o .: "multihop_port"
-        <*> o .: "socks_name"
-        <*> o .: "status_messages"
+        <$> o
+        .: "hostname"
+        <*> o
+        .: "country_code"
+        <*> o
+        .: "country_name"
+        <*> o
+        .: "city_code"
+        <*> o
+        .: "city_name"
+        <*> o
+        .: "active"
+        <*> o
+        .: "owned"
+        <*> o
+        .: "provider"
+        <*> o
+        .: "ipv4_addr_in"
+        <*> o
+        .: "ipv6_addr_in"
+        <*> o
+        .: "network_port_speed"
+        <*> o
+        .: "stboot"
+        <*> o
+        .: "pubkey"
+        <*> o
+        .: "multihop_port"
+        <*> o
+        .: "socks_name"
+        <*> o
+        .: "socks_port"
+        <*> o
+        .: "type"
+        <*> o
+        .: "status_messages"
 
 fetchPreferred :: Set Text -> IO [Server]
 fetchPreferred preferredCountryCodes =

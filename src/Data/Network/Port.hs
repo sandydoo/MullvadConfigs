@@ -1,12 +1,9 @@
 module Data.Network.Port
-  ( Port(..)
-  ) where
-
+    ( Port (..)
+    ) where
 
 import Data.Aeson
 
-
-
-newtype Port =
-  Port Word16
-  deriving newtype ( Eq, Ord, Show, FromJSON, ToJSON )
+newtype Port
+    = Port Word16
+    deriving newtype (Eq, Ord, Show, FromJSON, ToJSON)

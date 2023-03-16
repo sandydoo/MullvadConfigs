@@ -1,14 +1,11 @@
 module Data.Network
-  ( Ipv4
-  , Ipv6
-  , IpBlock
-  , Port(..)
-  ) where
-
+    ( Ipv4
+    , Ipv6
+    , IpBlock
+    , Port (..)
+    ) where
 
 import Data.Network.Port
-
-
 
 -- TODO
 type Ipv4 = Text

@@ -31,7 +31,7 @@
               cabal-install
               ghcid
               haskell-language-server
-              stylish-haskell
+              fourmolu
               pkgs.nixpkgs-fmt
             ]);
         };

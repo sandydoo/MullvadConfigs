@@ -11,3 +11,5 @@ dist-newstyle/
 # Nix
 result
 
+# Editor settings
+.nlsp-settings/

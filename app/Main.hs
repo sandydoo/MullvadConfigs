@@ -11,7 +11,7 @@ import qualified Server
 
 
 preferredCountryCodes :: Set Text
-preferredCountryCodes = Set.fromList [ "ch", "de", "gb", "nl", "se" ]
+preferredCountryCodes = Set.fromList [ "ch", "de", "gb", "nl", "ro", "se" ]
 
 
 

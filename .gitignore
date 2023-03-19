@@ -13,3 +13,6 @@ result
 
 # Editor settings
 .nlsp-settings/
+
+# Direnv
+.direnv/

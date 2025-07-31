@@ -3,7 +3,7 @@ module Data.CountryFlag
     ) where
 
 import qualified Data.Text as Text
-import qualified Text.Builder as TB
+import qualified TextBuilder as TB
 
 fromCountryCode :: Text -> Text
 fromCountryCode code =

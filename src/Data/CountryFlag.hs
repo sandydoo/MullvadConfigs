@@ -8,8 +8,8 @@ import qualified TextBuilder as TB
 fromCountryCode :: Text -> Text
 fromCountryCode code =
     let
-        toRegionalCode :: Char -> TB.Builder
-        toRegionalCode ch = TB.unicodeCodePoint $ ord ch - ord 'a' + ord '🇦'
+        toRegionalCode :: Char -> TB.TextBuilder
+        toRegionalCode ch = TB.unicodeCodepoint $ ord ch - ord 'a' + ord '🇦'
      in
-        TB.run $
+        TB.toText $
             Text.foldl' (\b ch -> b <> toRegionalCode ch) mempty code

@@ -124,7 +124,8 @@ toPrettyName Server {..} =
             CountryFlag.fromCountryCode serverCountryCode
         , Just $
             Text.toLower serverCityName
-        , Just serverHostname
+        , Just $
+            snd (Text.breakOnEnd "-" serverHostname)
         , if serverNetworkPortSpeed >= 10
             then Just "⚡"
             else Nothing
